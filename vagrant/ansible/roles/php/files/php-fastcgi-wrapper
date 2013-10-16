@@ -1,0 +1,10 @@
+#! /bin/sh
+# found here: http://binarytides.com/install-apache-php-mod-fastcgi-ubuntu
+PHP_FCGI_MAX_REQUESTS=10000
+export PHP_FCGI_MAX_REQUESTS
+
+PHP_FCGI_CHILDREN=5
+export PHP_FCGI_CHILDREN
+
+exec /usr/bin/php-cgi
+

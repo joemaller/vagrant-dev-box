@@ -1,0 +1,41 @@
+---
+
+- set_fact: 
+    fastcgi_extensions:
+      - libapache2-mod-fastcgi
+      - apache2-mpm-worker
+
+    fastcgi_mods:
+      - fastcgi
+      - actions
+
+
+
+- name: Install FastCGI extensions
+  apt: name={{ item }} state=installed update_cache=yes
+  with_items: fastcgi_extensions
+  when: php_fastcgi
+
+- name: Enable Apache mods
+  command: a2enmod {{ item }}
+  with_items: fastcgi_mods
+  when: php_fastcgi
+  notify:
+    - restart apache
+
+
+# # Remove
+
+# - name: Disable Apache mods
+#   command: a2dismod {{ item }}
+#   with_items: fastcgi_mods
+#   when: not php_fastcgi
+#   notify:
+#     - restart apache
+
+# - name: Remove FastCGI extensions
+#   apt: name={{ item }} state=absent
+#   with_items: fastcgi_extensions
+#   when: not php_fastcgi
+#   notify:
+#     - restart apache

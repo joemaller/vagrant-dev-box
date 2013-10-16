@@ -1,0 +1,35 @@
+---
+
+- set_fact: 
+    php_fastcgi_packages:
+      - php5-cgi
+
+# Install
+
+- name: "Install PHP 5 FastCGI packages"
+  apt: pkg={{ item }} state=installed update_cache=yes
+  with_items: php_fastcgi_packages
+  when: php_fastcgi
+
+- name: Copy php-fastcgi-wrapper script
+  copy: src=php-fastcgi-wrapper dest=/usr/local/bin/ mode=0755
+  when: php_fastcgi
+
+- name: Disable Apache2 PHP module
+  command: a2dismod {{ item }}
+  when: php_fastcgi
+  with_items:
+    - php5
+  notify:
+    - restart apache
+
+# Remove
+
+- name: "Remove PHP 5 FastCGI packages"
+  apt: pkg={{ item }} state=absent
+  with_items: php_fastcgi_packages
+  when: not php_fastcgi
+
+- name: Remove php-fastcgi-wrapper script
+  file: path=/usr/local/bin/php-fastcgi-wrapper state=absent
+  when: not php_fastcgi

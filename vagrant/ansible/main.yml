@@ -1,0 +1,56 @@
+---
+- hosts: all
+  sudo: true
+
+  vars: 
+    php_debug: true
+    php_fastcgi: false
+    mysql_db_name: tns
+    vhost_document_root: /home/iopweb/dev.ideasonpurpose.com
+
+  pre_tasks:
+    - name: write the motd
+      template: src=templates/motd.j2 dest=/etc/motd
+
+    - name: Update apt cache
+      apt: update_cache=yes
+
+    - name: install python-software-properties (required for Ansible)
+      apt: pkg=python-software-properties state=installed
+
+    - name: Install some basic tools
+      apt: pkg={{ item }} state=installed
+      with_items:
+        - make
+        - vim
+
+  roles:
+    - apache
+    - php
+    # - mariadb
+    - avahi
+
+  tasks:
+    - name: make fake virtualenv location
+      file: path=/home/iopweb/virtualenv/iop/bin/ state=directory
+
+    - name: fake a python virtualenv
+      file: src=/usr/bin/python dest=/home/iopweb/virtualenv/iop/bin/python state=link 
+
+    # Create the database first, otherwise the import step will fail
+    # - name: Create the database
+    #   mysql_db: name={{ mysql_db_name }} state=present
+
+    # - name: Populate database from a dumpfile
+    #   mysql_db: name={{ mysql_db_name }} state=import target=/var/www/app/config/sql/tns.sql login_user=root login_password={{ mysql_root_password }}
+
+    - name: Build tree for vhost_document_root link
+      file: path={{ vhost_document_root | dirname }} state=directory
+      tags: debug
+
+    - name: Link vhost_document_root to /var/www
+      file: path={{ vhost_document_root }} src=/var/www state=link
+      tags: debug
+      notify:
+        - restart apache
+        - restart avahi

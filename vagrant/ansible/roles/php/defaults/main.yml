@@ -1,0 +1,7 @@
+---
+
+php_debug: true
+
+php_fastcgi: false
+
+xhprof_output_dir: /var/tmp/xhprof

@@ -1,0 +1,7 @@
+---
+
+- name: Add deadsnakes PPA (for Python3)
+  apt_repository: repo='ppa:fkrull/deadsnakes'
+
+- name: Install Python 3.3
+  apt: pkg=python3.3 state=installed update_cache=yes

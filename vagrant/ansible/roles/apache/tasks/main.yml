@@ -1,0 +1,5 @@
+---
+
+- include: apache.yml
+- include: apache_fcgi.yml
+- include: vhost.yml

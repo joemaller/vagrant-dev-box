@@ -1,0 +1,11 @@
+---
+
+# main MySQL database
+mysql_db_name: vagrant
+
+# default MySQL user credentials
+mysql_username: vagrant
+mysql_password: vagrant
+
+# MySQL root password
+mysql_root_password: password

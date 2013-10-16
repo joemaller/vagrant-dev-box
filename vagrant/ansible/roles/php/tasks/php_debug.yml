@@ -1,0 +1,57 @@
+---
+
+- set_fact: 
+    php_debug_packages:
+      - php-pear
+      - php5-dev
+      - php5-xdebug
+      - graphviz
+
+# Install
+
+- name: "Install PHP 5 Debugging Tools"
+  apt: pkg={{ item }} state=installed update_cache=yes
+  with_items: php_debug_packages
+  when: php_debug
+
+- name: Update Pear to latest
+  command: pear upgrade pear
+  when: php_debug
+
+- name: "Set php_ini for PECL & Pear"
+  command: "{{ item }} config-set php_ini /etc/php5/apache2/php.ini"
+  with_items:
+    - pear
+    - pecl
+  when: php_debug
+
+- name: Install XHProf
+  command: pecl install -f xhprof-beta
+  when: php_debug
+
+- name: Create XHProf directory
+  file: dest={{ xhprof_output_dir }} state=directory mode=0777 owner=www-data group=www-data
+  when: php_debug
+
+- name: Inject XHProf INI
+  template: src=xhprof.ini.j2 dest=/etc/php5/conf.d/xhprof.ini mode=0644
+  when: php_debug
+  notify: 
+    - restart apache
+
+
+# Remove
+
+- name: Remove XHProf INI and report directory
+  file: path={{ item }} state=absent recurse=yes
+  with_items:
+    - /etc/php5/conf.d/xhprof.ini
+    - "{{ xhprof_output_dir }}"
+  when: not php_debug
+
+- name: "Remove PHP 5 Debugging Tools"
+  apt: pkg={{ item }} state=absent
+  with_items: php_debug_packages
+  when: not php_debug
+  notify: 
+    - restart apache

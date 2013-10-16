@@ -1,0 +1,10 @@
+---
+
+- include: php.yml
+  tags: php
+
+- include: php_debug.yml
+  tags: php
+
+- include: php_fastcgi.yml
+  tags: php

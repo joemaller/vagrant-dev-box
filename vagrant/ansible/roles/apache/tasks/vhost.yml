@@ -1,0 +1,18 @@
+---
+
+- name: Deactivate the default virtualhost
+  command: a2dissite default
+
+- name: Push default virtual host
+  template: src=vhost.j2 dest=/etc/apache2/sites-available/{{ ansible_hostname }} mode=0640
+  when: not php_fastcgi
+
+- name: Push FastCGI virtual host
+  template: src=fastcgi_vhost.j2 dest=/etc/apache2/sites-available/{{ ansible_hostname }} mode=0640
+  when: php_fastcgi
+
+- name: Activate our virtualhost
+  command: a2ensite {{ ansible_hostname }}
+  notify: 
+    - restart apache
+    - restart avahi
