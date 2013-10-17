@@ -9,6 +9,7 @@
   with_items:
     - php5
     - php5-mysql
+    - php5-mcrypt
 
 - name: Inject INIs for default time zone
   copy: src={{ item }}.ini dest=/etc/php5/conf.d/
