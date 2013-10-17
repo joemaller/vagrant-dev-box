@@ -1,1 +1,4 @@
+
 .vagrant/
+db/backups/
+vagrant_ansible_inventory_default

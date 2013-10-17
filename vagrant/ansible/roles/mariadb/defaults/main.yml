@@ -9,3 +9,6 @@ mysql_password: vagrant
 
 # MySQL root password
 mysql_root_password: password
+
+# Use older, more compatible MariaDB version
+max_mysql_compatibility: false

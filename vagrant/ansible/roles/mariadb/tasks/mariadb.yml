@@ -3,8 +3,13 @@
 - name: add maridadb apt repo key  #Appears to be idempotent (returns "imported"/"not changed")
   command: sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xcbcb082a1bb943db
 
-- name: add mariadb apt repo to sources
+- name: Add MariaDB 10.0 repository to sources
   apt_repository: repo='deb http://ftp.osuosl.org/pub/mariadb/repo/10.0/ubuntu precise main'
+  when: not max_mysql_compatibility
+
+- name: Add MariaDB 5.5 repository to sources
+  apt_repository: repo='deb http://ftp.osuosl.org/pub/mariadb/repo/5.5/ubuntu precise main'
+  when: max_mysql_compatibility
 
 - name: install mariadb-server 
   apt: name={{ item }} state=installed update_cache=yes
