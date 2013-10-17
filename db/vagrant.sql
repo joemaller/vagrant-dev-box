@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: vagrant
 -- ------------------------------------------------------
--- Server version	10.0.4-MariaDB-1~precise-log
+-- Server version   10.0.4-MariaDB-1~precise-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -14,53 +14,6 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
---
--- Table structure for table `category`
---
-
-DROP TABLE IF EXISTS `category`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `category` (
-  `id` int(4) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `category`
---
-
-LOCK TABLES `category` WRITE;
-/*!40000 ALTER TABLE `category` DISABLE KEYS */;
-/*!40000 ALTER TABLE `category` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `foo`
---
-
-DROP TABLE IF EXISTS `foo`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `foo` (
-  `id` int(4) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `foo`
---
-
-LOCK TABLES `foo` WRITE;
-/*!40000 ALTER TABLE `foo` DISABLE KEYS */;
-INSERT INTO `foo` VALUES (1,'foo'),(2,'Ansible');
-/*!40000 ALTER TABLE `foo` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `vagrant`
