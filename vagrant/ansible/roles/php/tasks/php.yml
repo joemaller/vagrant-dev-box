@@ -10,11 +10,18 @@
     - php5
     - php5-mysql
 
-- name: Inject INIs for error reporting and default time zone
+- name: Inject INIs for default time zone
   copy: src={{ item }}.ini dest=/etc/php5/conf.d/
   with_items:
-    - error_reporting
     - timezone
+
+- name: Generate error reporting INI -- all errors
+  template: src=error_reporting_all.ini.j2 dest=/etc/php5/conf.d
+  when: php_debug
+
+- name: Generate error reporting INI -- no errors
+  template: src=error_reporting_none.ini.j2 dest=/etc/php5/conf.d
+  when: not php_debug
 
 - name: Enable Apache2 PHP module
   command: a2enmod {{ item }}
