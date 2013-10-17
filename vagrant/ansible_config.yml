@@ -1,0 +1,72 @@
+---
+
+# All of the settings in this file are covered by defaults
+# so this can be completely empty (or even deleted) and the
+# playbooks will still run. There should be no need to edit
+# the inividual playbook roles.
+
+
+############################################################
+#                          Apache                          #
+############################################################
+
+# Vagrant's working folder will be synced as /var/www but 
+# if some scripts are expecting a different location, this 
+# can be used to link the web files to a different path. If 
+# the path is /var/www, the setting will be ignored. 
+vhost_document_root: /var/www
+
+
+############################################################
+#                           PHP                            #
+############################################################
+
+# Install PHP debugging tools Xdebug and XHProf
+php_debug: true
+
+# THe PHP error_reporting level to be set in php.ini. Error 
+# levels can be selectively added or removed, for example:
+# 'E_ALL & ~E_STRICT & ~E_DEPRECATED'
+# This setting has no effect if php_debug is false. 
+php_error_reporting: E_ALL
+
+# If true, run PHP as FastCGI instead of an Apache Module
+php_fastcgi: false
+
+# Path where XHProf will store it's run reports
+xhprof_output_dir: /var/tmp/xhprof
+
+
+############################################################
+#                     MariaDB (MySQL)                      #
+############################################################
+
+# Name of the MySQL database
+mysql_db_name: vagrant
+
+# Default MySQL user credentials
+mysql_username: vagrant
+mysql_password: vagrant
+
+# MySQL root password. (instead of blank)
+mysql_root_password: password
+
+# Use older, more compatible MariaDB version. If True, then
+# MariaDB 5.5 will be installed. The default is to use the 
+# most cutting edge release (v10)
+max_mysql_compatibility: false
+
+# Location of MySQL dumpfiles to load into the database.
+# Existing data is backed up each time the playbook runs.
+mysql_dumpfiles:
+  - db/vagrant.sql
+
+
+############################################################
+#                          Avahi                           #
+############################################################
+
+# The name which will be advertised over Bonjour/Zeroconf
+# '%h' is a placeholder for hostname
+avahi_banner: "%h (Vagrant)"
+
