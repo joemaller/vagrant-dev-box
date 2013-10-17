@@ -5,7 +5,7 @@
 # $hostname = "vagrant"
 
 # If no hostname is set, try using the sanitized name of the containing directory
-$hostname ||= File.basename(Dir.getwd).downcase.gsub(/\W+/,'-').gsub(/^-+|-+$/,'')
+$hostname ||= File.basename(Dir.getwd).downcase.gsub(/[^a-z0-9]+/,'-').gsub(/^-+|-+$/,'')
 # if that fails, fallback to 'vagrant'
 $hostname = "vagrant" if $hostname.empty?
 
