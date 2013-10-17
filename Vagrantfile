@@ -28,7 +28,6 @@ is_win = Vagrant::Util::Platform.windows?
 # puts("Dir.getwd", Dir.getwd, File.basename(Dir.getwd).downcase)
 # puts('----')
 
-
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
 
@@ -63,7 +62,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   if do_ansible
     config.vm.provision "ansible" do |ansible|
-      # ansible.verbose = "v"
+      # ansible.verbose = "v" # 1.3.4 ansible verbosity-flag bug
       ansible.playbook = "vagrant/ansible/main.yml"
     end
   else
