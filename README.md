@@ -12,6 +12,8 @@ If everything works, this is pretty much it:
 
 Some Windows machines will need to manually run the provisioner with `vagrant provision` also. 
 
+The VM can be fully configured with settings in the [vagrant/ansible_config.yml][ansible_config] file. Start there if you need to customize something. 
+
 ### What's included
 
 It's a pretty boring stack:
@@ -45,6 +47,7 @@ This is a work in progress. Most testing and development is done on Macs, it's c
 [ansible]: http://www.ansibleworks.com/
 [vagrant]: http://www.vagrantup.com/
 [virtualbox]: https://www.virtualbox.org/
+[ansible_config]: https://github.com/joemaller/vagrant-dev-box/blob/master/vagrant/ansible_config.yml
 
 [avahi]: http://en.wikipedia.org/wiki/Avahi_%28software%29
 [xhprof]: https://github.com/facebook/xhprof
