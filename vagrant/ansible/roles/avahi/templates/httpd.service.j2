@@ -1,9 +1,9 @@
 <?xml version="1.0" standalone="no"?><!--*-nxml-*-->
 <!DOCTYPE service-group SYSTEM "avahi-service.dtd">
 <service-group>
-<name replace-wildcards="yes">IOP Staging on %h</name>
+<name replace-wildcards="yes">{{ avahi_banner }}</name>
 <service>
-        <type>_http._tcp</type>
-        <port>80</port>
+<type>_http._tcp</type>
+<port>80</port>
 </service>
 </service-group>

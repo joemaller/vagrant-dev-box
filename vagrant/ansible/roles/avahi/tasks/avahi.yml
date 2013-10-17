@@ -4,6 +4,6 @@
   apt: pkg=avahi-daemon state=installed update_cache=yes
 
 - name: Advertise site with Zeroconf
-  copy: src=httpd.service dest=/etc/avahi/services/ mode=0644 
+  template: src=httpd.service.j2 dest=/etc/avahi/services/httpd.service mode=0644 
   notify: 
     - restart avahi
