@@ -23,6 +23,7 @@
       with_items:
         - make
         - vim
+        - curl
 
   roles:
     - apache

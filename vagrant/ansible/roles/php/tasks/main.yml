@@ -3,6 +3,9 @@
 - include: php.yml
   tags: php
 
+- include: composer.yml
+  tags: php
+
 - include: php_debug.yml
   tags: php
 

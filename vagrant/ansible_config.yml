@@ -33,6 +33,9 @@ php_error_reporting: E_ALL
 # If true, run PHP as FastCGI instead of an Apache Module
 php_fastcgi: false
 
+# Install Composer
+install_composer: true
+
 # Path where XHProf will store it's run reports
 xhprof_output_dir: /var/tmp/xhprof
 

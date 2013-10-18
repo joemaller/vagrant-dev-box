@@ -1,0 +1,9 @@
+---
+
+- name: Install Composer
+  shell: chdir=/tmp curl -sS https://getcomposer.org/installer | php
+  when: install_composer
+
+- name: "Move Composer to /usr/local/bin"
+  command: mv /tmp/composer.phar /usr/local/bin/composer
+  when: install_composer
