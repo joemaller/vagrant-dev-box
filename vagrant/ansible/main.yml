@@ -6,8 +6,6 @@
     - ../ansible_config.yml
 
   pre_tasks:
-  
-    - debug: "msg=\"{{ ansible_env }}  and this... {{ ansible_env['PWD'] }}\""
 
     - name: write the motd
       template: src=templates/motd.j2 dest=/etc/motd
