@@ -38,6 +38,9 @@ The VM includes [Avahi][], so the server will advertise itself over Bonjour/Zero
 
 You'll probably want to install [Ansible][] too. Seriously, it's awesome.
 
+* The playbooks currently use features from Ansible 1.4, which is still being actively developed. The easiest way I've found to deal with this is to install Ansible from Github using Pip:  
+
+        pip install git+git://github.com/ansible/ansible.git@devel 
 
 ### Caveats
 
