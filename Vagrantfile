@@ -19,14 +19,11 @@ pref_interface = pref_interface.map {|n| n if vm_interfaces.include?(n)}.compact
 $network_interface = pref_interface[0]
 
 do_ansible = `ansible-playbook --version` rescue nil
-# Are we on Windows?
-is_win = Vagrant::Util::Platform.windows?
-# puts('----')
-# puts('hostname', $hostname)
-# puts("is_win", is_win)
-# puts("do_ansible", do_ansible)
-# puts("Dir.getwd", Dir.getwd, File.basename(Dir.getwd).downcase)
-# puts('----')
+ansible_up_to_date = false
+if do_ansible
+  ansible_baseline = Gem::Version.new('1.4')
+  ansible_up_to_date= Gem::Version.new(do_ansible.split()[1]) >= ansible_baseline
+end
 
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
@@ -60,7 +57,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # until that works, individual key:value pairs can be set like this:
   # ENV['ANSIBLE_ERROR_ON_UNDEFINED_VARS'] = "false"
 
-  if do_ansible
+  if do_ansible && ansible_up_to_date
     config.vm.provision "ansible" do |ansible|
       # ansible.verbose = "v" # 1.3.4 ansible verbosity-flag bug
       ansible.playbook = "vagrant/ansible/main.yml"
