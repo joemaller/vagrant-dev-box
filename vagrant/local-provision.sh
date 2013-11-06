@@ -6,14 +6,15 @@
 #
 
 
-echo
+ANSIBLE_PLAYBOOK='/vagrant/vagrant/ansible/main.yml'
 prefix='SHELL:'
 PAD='*********************************************************************'
 
+echo
 MSG='Ansible not found on host system, running locally on VM'
 echo "${prefix} [${MSG}] ${PAD:${#MSG}}"
-echo
 
+echo
 MSG='Installing Git and Python dependencies'
 echo "${prefix} [${MSG}] ${PAD:${#MSG}}"
 echo
@@ -29,14 +30,23 @@ ANSIBLE_TMP=$(mktemp -d /tmp/ansible-XXXX)
 git clone https://github.com/ansible/ansible.git $ANSIBLE_TMP
 source $ANSIBLE_TMP/hacking/env-setup > /dev/null
 
-echo
-MSG='Running Ansible playbooks locally (this might take a while)'
-echo "${prefix} [${MSG}] ${PAD:${#MSG}}"
+if [ -f $ANSIBLE_PLAYBOOK ]; then
 
-hostname > $ANSIBLE_TMP/hosts
-ansible-playbook -i $ANSIBLE_TMP/hosts /var/www/vagrant/ansible/main.yml --connection=local
-rm $ANSIBLE_TMP/hosts
+    echo
+    MSG='Running Ansible playbooks locally (this might take a while)'
+    echo "${prefix} [${MSG}] ${PAD:${#MSG}}"
 
+    hostname > $ANSIBLE_TMP/hosts
+    ansible-playbook -i $ANSIBLE_TMP/hosts $ANSIBLE_PLAYBOOK --connection=local
+    rm $ANSIBLE_TMP/hosts
+
+    MSG='Local provisioning complete!'
+else
+    echo
+    MSG="Could not find playbook ${ANSIBLE_PLAYBOOK}"
+    echo "${prefix} [${MSG}] ${PAD:${#MSG}}"
+
+    MSG='Local provisioning failed!'
+fi
 echo
-MSG='Local provisioning complete!'
 echo "${prefix} [${MSG}] ${PAD:${#MSG}}"
