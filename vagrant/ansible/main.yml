@@ -26,9 +26,7 @@
   roles:
     - apache
     - php
-    # - node
-    # node was supposed to be for Grunt LiveReload, but NFS is too slow noticing 
-    # changes to shared folders. Install it locally and run grunt watch from there
+    - node
     - mariadb
     - avahi
 

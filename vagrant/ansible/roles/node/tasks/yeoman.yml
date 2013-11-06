@@ -1,0 +1,4 @@
+---
+
+- name: Install Yeoman (includes Grunt, Bower and Yo)
+  npm: name=yo global=yes state=latest
