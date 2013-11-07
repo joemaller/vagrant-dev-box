@@ -70,6 +70,6 @@ mysql_dumpfiles:
 ############################################################
 
 # The name which will be advertised over Bonjour/Zeroconf
-# '%h' is a placeholder for hostname
+# '%h' is an Avahi placeholder for hostname
 avahi_banner: "%h (Vagrant)"
 
