@@ -34,6 +34,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.hostname = $hostname
 
+  # Specifying :bridge with our preferred network lets Vagrant skip
+  # "What interface should the network bridge to?" when spinning up the VM
   config.vm.network "public_network", :bridge => $network_interface
 
   config.vm.network "forwarded_port", guest: 80, host: 8080
