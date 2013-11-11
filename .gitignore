@@ -2,4 +2,6 @@
 db/backups/
 vagrant_ansible_inventory_default
 node_modules/
+
+public/css/*.css
 .sass-cache/
