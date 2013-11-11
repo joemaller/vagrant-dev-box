@@ -1,0 +1,1 @@
+{{ ansible_hostname }} -fstype=fuse,rw,nodev,noatime,allow_other,cache=no :sshfs\#{{ host_alias }}\:{{ inventory_dir }}

@@ -22,8 +22,10 @@
         - make
         - vim
         - curl
+        - rubygems
 
   roles:
+    - sshfs
     - apache
     - php
     - node

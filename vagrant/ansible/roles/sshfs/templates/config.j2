@@ -1,0 +1,15 @@
+# Generated ssh config entry for mounting the host directory via sshfs
+
+Host vagrant-host
+    Hostname {{ ansible_default_ipv4.gateway }}
+    User {{ host_username }}
+    StrictHostKeyChecking no
+    UserKnownHostsFile=/dev/null
+    IdentityFile={{ ssh_key_file }}
+    TCPKeepAlive yes
+    ServerAliveCountMax 1
+    ServerAliveInterval 5
+
+#    ControlPersist 1h
+#    ControlMaster auto
+#    ControlPath /tmp/ssh_mux_%h_%p_%r

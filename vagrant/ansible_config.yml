@@ -10,11 +10,21 @@
 #                          Apache                          #
 ############################################################
 
-# Vagrant's working folder will be synced as /var/www but 
-# if some scripts are expecting a different location, this 
-# can be used to link the web files to a different path. If 
-# the path is /var/www, the setting will be ignored. 
-vhost_document_root: /var/www
+# Vagrant's working folder will be synced as /vagrant/ but 
+# the working directory will be shared in via sshfs to the
+# location specified here.
+# Additionally, this can be used to link the web files to a
+# different path. An example might be a shared hosting web 
+# directory like /home/user/public_html or 
+# /home/user/webapps/domain.
+# If the path is /var/www, the setting will be ignored.
+# (and SSHFS mounts will cause all sorts of problems)
+vhost_document_root: /mnt/sshfs/{{ ansible_hostname }}
+
+# This is the public_html directory containing the publicly
+# visible web files. Yeoman uses app, Laravel uses public,
+# Symfony uses web. Sheesh. 
+public_web_dir: public
 
 
 ############################################################
@@ -73,3 +83,29 @@ mysql_dumpfiles:
 # '%h' is an Avahi placeholder for hostname
 avahi_banner: "%h (Vagrant)"
 
+
+############################################################
+#                         Node.js                          #
+############################################################
+
+# Location of a package.json file to install. Path should be 
+# relative to the Vagrantfile. If no file is specified the
+# task will be skipped. 
+package_json_file: package.json
+
+# Location of a Gruntfile.js. If it exists, try running 
+# grunt watch in the background.
+gruntfile: Gruntfile.js
+
+# SSH alias for Vagrant's host machine. This is used in the 
+# ssh config file and the sshfs mount command
+host_alias: vagrant-host
+
+# The username to connect to the host. Defaults to the
+# current username. Should have an account and be able to
+# log in remotely to the host machine. 
+host_username: "{{ lookup('pipe', 'whoami') }}"
+
+# Location where the host-access rsa keys will be created. 
+# Public keys will use this file path with '.pub' appended.
+ssh_key_file: /home/vagrant/.ssh/vagrant_rsa

@@ -1,0 +1,5 @@
+---
+
+host_alias: vagrant-host
+host_username: "{{ lookup('pipe', 'whoami') }}"
+ssh_key_file: /home/vagrant/.ssh/vagrant_rsa

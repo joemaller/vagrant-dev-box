@@ -2,3 +2,32 @@
 
 - name: Install Yeoman (includes Grunt, Bower and Yo)
   npm: name=yo global=yes state=latest
+
+- name: Install Compass gem (ruby, includes Sass)
+  gem: name=compass state=latest
+
+- name: Check for package.json file to install from
+  stat: path=/vagrant/{{ package_json_file }}
+  register: package_json_stat
+
+- name: where am i?
+  command: pwd
+  register: pwd
+  
+- debug: msg="{{ pwd }}"
+
+- debug: msg="{{ package_json_stat }}"
+
+- name: NPM install from package.json (if exists)
+  npm:  path=/vagrant/{{ package_json_file }}
+  when: package_json_stat.stat.exists
+
+- name: Check for Gruntfile.js file
+  stat: path=/mnt/sshfs/{{ gruntfile }}
+  register: gruntfile_stat
+
+- debug: msg="{{ gruntfile_stat }}"
+
+- name: Run grunt watch (if Gruntfile.js exists)
+  shell:  grunt watch chdir=/mnt/sshfs/{{ ansible_hostname }}
+  when: gruntfile_stat.stat.exists

@@ -1,5 +1,5 @@
 <VirtualHost *:80>
-    DocumentRoot {{ vhost_document_root }}
+    DocumentRoot {{ vhost_document_root }}/{{ public_web_dir }}
     ServerName {{ ansible_hostname }}.local
 
     <directory />

@@ -1,0 +1,211 @@
+---
+
+- name: Remove pre-existing generated keys
+  file: path={{ item }} state=absent
+  with_items: 
+    - "{{ ssh_key_file }}"
+    - "{{ ssh_key_file }}.pub"
+    # - /home/vagrant/.ssh/{{ ssh_key_file }}.pub
+
+# - name: create /home/vagrant/.ssh/
+#   file: path=/home/vagrant/.ssh/ state=directory mode=0700
+
+- name: Generate new ssh keys
+  command: "ssh-keygen -t rsa -f {{ ssh_key_file }} -q -N ''"
+  # sudo: no
+
+- name: Get contents of new ssh public key
+  command: "cat {{ ssh_key_file }}.pub"
+  register: ssh_public_key
+
+- name: Insert key into hosts's authorized_keys file
+  sudo: no
+  local_action: 
+    lineinfile
+    dest=~/.ssh/authorized_keys
+    regexp="vagrant@{{ ansible_hostname }}$"
+    line="{{ ssh_public_key.stdout }}"
+
+
+
+## TODO: fix this, is not idempotent, recreates the top-half each time
+- name: Create ssh_config temp file
+  command: mktemp /tmp/ssh_config-XXXX
+  register: ssh_temp
+
+- debug: 'msg="this is ssh_temp: {{ ssh_temp.stdout }}"'
+
+- name: Generate vagrant-host SSH config entry
+  template: src=config.j2 dest={{ ssh_temp.stdout }}
+
+- name: Append existing global ssh_config
+  shell: cat /etc/ssh/ssh_config >> {{ ssh_temp.stdout }}
+
+- name: Replace global ssh_config
+  shell: cat {{ ssh_temp.stdout }} > /etc/ssh/ssh_config
+
+
+
+- debug: msg={{ }}
+
+- name: fix ~/.ssh permissions
+  file: path=/home/vagrant/.ssh recurse=yes owner=vagrant group=vagrant state=directory
+
+# TODO: add autofs here
+- name: Install sshfs
+  apt: pkg={{ item }} state=installed update_cache=no
+  with_items:
+    - sshfs
+    - autofs
+
+- name: Add vagrant user to fuse group
+  user:  name=vagrant groups=fuse append=true
+
+- name: Enable 'user_allow_other' in /etc/fuse.conf
+  lineinfile: 
+    dest=/etc/fuse.conf
+    regexp="#?user_allow_other"
+    line=user_allow_other
+    mode=0644
+
+
+- name: create /home/vagrant/.ssh/
+  file: path=/mnt/sshfs/ state=directory mode=0777
+
+
+- name: Generate autofs.master
+  template: src=auto.master.j2 dest=/etc/auto.master mode=0644
+  notify:
+    - Restart autofs
+
+
+- name: Generate autofs.sshfs
+  template: src=auto.sshfs.j2 dest=/etc/auto.sshfs mode=0644
+  notify:
+    - Restart autofs
+
+
+# - name: Add sshfs mount to /etc/fstab
+#   lineinfile: 
+#     dest=/etc/fstab
+#     "regexp=sshfs#{{ host_username }}@{{ host_alias }}.*$"
+#     "line=sshfs#{{ host_username }}@{{ host_alias }}:{{ inventory_dir }}    {{ vhost_document_root }}    fuse    noauto,user,cache=no,allow_other    0    0"
+
+
+
+# - debug: msg={{ host_username }}
+# - debug: msg={{ inventory_dir }}
+# - debug: 'msg="{{ ssh_public_key.stdout }}"'
+# - debug: 'msg="{{ ssh_public_key.stdout }}"'
+# - debug: 'msg="{{ ssh_public_key.stdout }}"'
+
+# - set_fact: 
+#     public_key: "{{ lookup('file', '/root/.ssh/' + ssh_key_file + '.pub')}}"
+
+# - name: Create authorized_keys temp file
+#   command: mktemp  /tmp/authorized_keys-XXXX
+#   register: temp_key_file
+
+
+
+# - name: dump everything
+#   sudo: no
+# # connection: local
+#   template:
+#      src=debug.j2 
+#      dest=/vagrant/vars.txt 
+
+
+# - debug: 'msg="{{hostvars[inventory_hostname]}}"'
+
+  # connection: local
+# - debug: msg="{{public_key}}"
+
+# - name: Copy down the hosts authorized_keys file to insert our key
+#   copy: 
+#     src=/Users/joe/.ssh/authorized_keys
+#     dest="{{ temp_key_file.stdout }}"
+#   # debug:
+#   #   msg="{{ lookup('file', '/root/.ssh/' + ssh_key_file + '.pub')}}"
+
+# - name: Add ssh key to copied authorized_keys file
+#   lineinfile: 
+#     dest="{{ temp_key_file.stdout }}"
+#     regexp="vagrant@{{ lookup('pipe', 'hostname') }}$"
+#     line="{{ lookup('file', '/root/.ssh/' + ssh_key_file + '.pub')}}"
+# - name: Attempt to unmount the mount point (yeah, really)
+#   command: umount -f {{ vhost_document_root }}
+
+#   ignore_errors: yes
+
+# - name: try to grab host IP address
+#   connection: local
+#   set_fact:
+#     local_ip: "{{ ansible_default_ipv4.address }}"
+
+# - debug: msg="{{ local_ip }}"
+
+# - debug: msg="{{ lookup('pipe', 'hostname')}}"
+
+# - name: Attempt to umount the mount point (yeah, really)
+#   command: fusermount -u {{ vhost_document_root }}
+#   ignore_errors: yes
+
+# - name: Make sure mount point exists
+#   file: 
+#     path={{ vhost_document_root }}
+#     group=www-data
+#     mode=0777
+#     state=directory
+
+# # - name: Attempt to unmount the mount point, just in case (really)
+# #   mount: name=/var/www state=unmounted
+
+# - name: Add mount to fstab
+#   mount: 
+#     fstype=fuse
+#     name={{ vhost_document_root }}
+#     opts=_netdev,noauto,user,cache=no,allow_other
+#     "src=sshfs#{{ host_username }}@{{ host_alias }}:{{ inventory_dir }}"
+#     state=mounted
+
+#   # works
+# - name: Add test mount to fstab
+#   mount: 
+#     fstype=ext3
+#     name=/var/mounttest
+#     opts=defaults
+#     "src=/dev/sdb1"
+#     state=mounted
+
+# - name: mount it!
+#   # sudo: no
+#   # script: mount_sshfs.sh
+#   # shell: mount /var/www
+#   # raw: mount /var/www
+#   # command: mount /var/www
+#   mount: 
+#     fstype=fuse
+#     name=/var/www
+#     opts=noauto,user,cache=no,allow_other
+#     "src=sshfs#{{ host_username }}@{{ host_alias }}:{{ inventory_dir }}"
+#     state=mounted
+
+# - debug: "msg=controller_hostname: {{ controller_hostname }}"
+# - name: Do we have the right address?
+#   debug: "msg={{ ansible_default_ipv4.gateway }}"
+# - debug: msg="{{ lookup('pipe', 'whoami') }}"
+
+
+# - name: Try sshfs mounting the host
+#   sudo: no
+#   # command: "sshfs {{ host_username }}@vagrant-host:{{ inventory_dir }} {{ vhost_document_root }} -o IdentityFile=/root/.ssh/{{ ssh_key_file }} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o cache=no -o allow_other"
+#   # command: "sshfs {{ host_username }}@{{ ansible_default_ipv4.gateway }}:{{ inventory_dir }} {{ vhost_document_root }} -o cache=no -o allow_other"
+#   command: "sshfs {{ host_alias }}:{{ inventory_dir }} {{ vhost_document_root }} -o cache=no -o allow_other"
+#   # command: /home/vagrant/sshfs.sh
+
+
+# working mount command:
+# mount -t fuse -s -o uid=1000,gid=1000,IdentityFile=/home/vagrant/.ssh/vagrant_rsa,rw,allow_other sshfs#vagrant-host: /mnt/sshfs
+
+
