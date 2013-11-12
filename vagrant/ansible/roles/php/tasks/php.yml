@@ -12,9 +12,7 @@
     - php5-mcrypt
 
 - name: Inject INIs for default time zone
-  copy: src={{ item }}.ini dest=/etc/php5/conf.d/
-  with_items:
-    - timezone
+  template: src=timezone.ini.j2 dest=/etc/php5/conf.d/timezone.ini
 
 - name: Generate error reporting INI -- all errors
   template: src=error_reporting_all.ini.j2 dest=/etc/php5/conf.d/error_reporting.ini

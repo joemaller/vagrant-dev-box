@@ -43,6 +43,10 @@ php_error_reporting: E_ALL
 # If true, run PHP as FastCGI instead of an Apache Module
 php_fastcgi: false
 
+# Default timezone for php.ini
+# http://www.php.net/manual/en/timezones.php
+php_timezone: America/New_York
+
 # Install Composer
 install_composer: true
 
