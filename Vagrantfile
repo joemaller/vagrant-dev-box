@@ -4,8 +4,8 @@
 # Set the reusable hostname:
 # $hostname = "vagrant"
 
-# If no hostname is set, try using the sanitized name of the containing directory
-$hostname ||= File.basename(Dir.getwd).downcase.gsub(/[^a-z0-9]+/,'-').gsub(/^-+|-+$/,'')
+# If no hostname is set, use the sanitized name of the Vagrantfile's containing directory
+$hostname ||= File.basename(File.dirname(File.expand_path(__FILE__))).downcase.gsub(/[^a-z0-9]+/,'-').gsub(/^-+|-+$/,'')
 # if that fails, fallback to 'vagrant'
 $hostname = "vagrant" if $hostname.empty?
 
