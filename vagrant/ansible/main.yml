@@ -22,7 +22,6 @@
         - make
         - vim
         - curl
-        - rubygems
 
   roles:
     - sshfs
