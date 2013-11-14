@@ -5,6 +5,8 @@
 # playbooks will still run. There should be no need to edit
 # the inividual playbook roles.
 
+synced_folder: /vagrant_synced
+
 
 ############################################################
 #                          Apache                          #
@@ -92,9 +94,10 @@ avahi_banner: "%h (Vagrant)"
 #                         Node.js                          #
 ############################################################
 
-# Location of a package.json file to install. Path should be 
-# relative to the Vagrantfile. If no file is specified the
-# task will be skipped. 
+# Location of the package.json file to install with NPM. Can
+# be an absolute path or relative to the Vagrantfile. If no 
+# file is specified or the file doesn't exist, the task will
+# be skipped. 
 package_json_file: package.json
 
 # Location of a Gruntfile.js. If it exists, try running 

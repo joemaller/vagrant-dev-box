@@ -1,0 +1,4 @@
+---
+
+package_json_filepath: "{{ [synced_folder, ansible_hostname, package_json_file] | join('/') }}"
+gruntfile_filepath: "{{ [synced_folder, ansible_hostname, gruntfile] | join('/') }}"

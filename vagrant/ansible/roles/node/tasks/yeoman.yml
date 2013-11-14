@@ -10,23 +10,24 @@
   gem: name=compass state=latest user_install=no
 
 - name: Check for package.json file to install from
-  stat: path=/vagrant/{{ package_json_file }}
+  stat: path={{ package_json_filepath }}
   register: package_json_stat
 
 - name: NPM install from package.json (if exists)
-  npm:  path=/vagrant/{{ package_json_file | dirname }} state=latest
+  npm: path={{ package_json_filepath  | dirname }} state=latest
   when: package_json_stat.stat.exists
 
 - name: Check for Gruntfile.js file
-  stat: path=/mnt/sshfs/{{ ansible_hostname }}/{{ gruntfile }}
+  stat: path={{ gruntfile_filepath }}
   register: gruntfile_stat
 
+# TODO: Convert this to a service? https://github.com/joemaller/vagrant-dev-box/issues/7
 - name: Kill any pre-existing Grunt processes
   command: killall grunt
   ignore_errors: yes
 
 - name: Run grunt watch in the background (if Gruntfile.js exists)
-  shell: grunt watch > /var/log/grunt.log chdir=/mnt/sshfs/{{ ansible_hostname }}
+  shell: grunt watch > /var/log/grunt.log chdir={{ gruntfile_filepath | dirname }}
   async: 3141592653  #99+ years, will be switchd to 0 when https://github.com/ansible/ansible/pull/4807 is merged
   poll: 0
   when: gruntfile_stat.stat.exists

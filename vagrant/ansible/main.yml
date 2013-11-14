@@ -5,6 +5,10 @@
   vars_files:
     - ../ansible_config.yml
 
+  vars: 
+    # global variable default fallbacks defined here, will be overridden by the vars_file
+    synced_folder: /vagrant_synced 
+
   pre_tasks:
 
     - name: write the motd
@@ -22,6 +26,12 @@
         - make
         - vim
         - curl
+
+    - name: Set up linked folder {{ synced_folder }}
+      file: path={{ synced_folder }} state=directory mode=0777 force=yes
+
+    - name: Link standard share to {{ synced_folder }}
+      file: dest={{ synced_folder }}/{{ ansible_hostname }} src=/vagrant state=link mode=0777 force=yes
 
   roles:
     - sshfs
