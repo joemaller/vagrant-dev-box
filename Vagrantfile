@@ -44,7 +44,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.network "private_network", ip: "192.168.33.10"
 
   # NFS passwords fixed with this: https://gist.github.com/joemaller/6764700
-  # NFS is silently ignored under Windows (true?)
+  # NFS is silently ignored under Windows
+  config.vm.synced_folder ".", "/vagrant_synced/" + $hostname, nfs: true
   # config.vm.synced_folder ".", "/var/www", :nfs => true
 
   config.vm.provider "virtualbox" do |v|
