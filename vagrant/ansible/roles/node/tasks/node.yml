@@ -1,9 +1,7 @@
 ---
 
-- name: Add latest Node repository
-  apt_repository: repo=ppa:chris-lea/node.js
+- name: Download node.js tarball
+  get_url: url=http://nodejs.org/dist/{{ install_node_version }}/node-{{ install_node_version }}-linux-x86.tar.gz dest=/tmp/node.tgz force=yes
 
-- name: "Install Node.js"
-  apt: pkg={{ item }} state=installed update_cache=yes
-  with_items:
-    - nodejs
+- name: Install node.js from tarball
+  command: tar xzf /tmp/node.tgz --strip-components=1 -C /usr/local

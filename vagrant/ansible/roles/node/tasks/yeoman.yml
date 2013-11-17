@@ -26,6 +26,9 @@
   command: killall grunt
   ignore_errors: yes
 
+- name: Prepare Grunt watch log file
+  file: path=/var/log/grunt.log mode=0766
+
 - name: Run grunt watch in the background (if Gruntfile.js exists)
   shell: grunt watch > /var/log/grunt.log chdir={{ gruntfile_filepath | dirname }}
   async: 3141592653  #99+ years, will be switchd to 0 when https://github.com/ansible/ansible/pull/4807 is merged

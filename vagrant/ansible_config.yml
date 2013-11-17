@@ -94,6 +94,11 @@ avahi_banner: "%h (Vagrant)"
 #                         Node.js                          #
 ############################################################
 
+# The version of node.js to install. (including 'v' prefix)
+# The string 'latest' will install the most recent stable 
+# version found here: http://nodejs.org/dist/latest/
+node_version: latest
+
 # Location of the package.json file to install with NPM. Can
 # be an absolute path or relative to the Vagrantfile. If no 
 # file is specified or the file doesn't exist, the task will
