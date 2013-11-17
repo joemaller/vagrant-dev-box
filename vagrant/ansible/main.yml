@@ -21,13 +21,21 @@
       apt: pkg=python-software-properties state=installed
 
     - name: Set up linked folder {{ synced_folder }}
-      file: path={{ synced_folder }} state=directory mode=0777 force=yes
+      file: path={{ synced_folder }} state=directory mode=0777 owner=vagrant group=vagrant
 
-    - name: Link standard share to {{ synced_folder }}
-      file: dest={{ synced_folder }}/{{ ansible_hostname }} src=/vagrant state=link mode=0777 force=yes
+    # - name: Link standard share to {{ synced_folder }}
+    #   file: dest={{ synced_folder }}/{{ ansible_hostname }} src=/vagrant state=link mode=0777
+
+    # - name: Check if the NFS mount exists
+    #   stat: path=/mnt/nfs/{{ ansible_hostname }}
+    #   register: nfs_mount
+
+    # - name: Link NFS mount to {{ synced_folder }} (overwrite previous links)
+    #   file: dest={{ synced_folder }}/{{ ansible_hostname }} src=/mnt/nfs/{{ ansible_hostname }} state=link mode=0777 owner=vagrant group=vagrant force=yes
+    #   when: nfs_mount.stat.exists
 
   roles:
-    - sshfs
+    # - sshfs
     - apache
     - php
     - node

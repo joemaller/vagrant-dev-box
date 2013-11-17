@@ -21,7 +21,7 @@ synced_folder: /vagrant_synced
 # /home/user/webapps/domain.
 # If the path is /var/www, the setting will be ignored.
 # (and SSHFS mounts will cause all sorts of problems)
-vhost_document_root: /mnt/sshfs/{{ ansible_hostname }}
+vhost_document_root: "{{ synced_folder }}/{{ ansible_hostname }}"
 
 # This is the public_html directory containing the publicly
 # visible web files. Yeoman uses app, Laravel uses public,

@@ -57,7 +57,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   if do_ansible && ansible_up_to_date
     config.vm.provision "ansible" do |ansible|
-      ansible.verbose = "v" # 1.3.4 ansible verbosity-flag bug
+      # ansible.verbose = "vvvv"
       ansible.playbook = "vagrant/ansible/main.yml"
     end
   else
