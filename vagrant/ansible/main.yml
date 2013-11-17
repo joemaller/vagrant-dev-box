@@ -20,13 +20,6 @@
     - name: install python-software-properties (required for Ansible)
       apt: pkg=python-software-properties state=installed
 
-    - name: Install some basic tools
-      apt: pkg={{ item }} state=installed
-      with_items:
-        - make
-        - vim
-        - curl
-
     - name: Set up linked folder {{ synced_folder }}
       file: path={{ synced_folder }} state=directory mode=0777 force=yes
 
