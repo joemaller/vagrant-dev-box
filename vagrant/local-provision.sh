@@ -20,15 +20,7 @@ echo "${prefix} [${MSG}] ${PAD:${#MSG}}"
 echo
 
 apt-get -y install git python-pip python-crypto
-pip install paramiko pyyaml jinja2 markupsafe
-
-echo
-MSG='Installing Ansible'
-echo "${prefix} [${MSG}] ${PAD:${#MSG}}"
-
-ANSIBLE_TMP=$(mktemp -d /tmp/ansible-XXXX)
-git clone https://github.com/ansible/ansible.git $ANSIBLE_TMP
-source $ANSIBLE_TMP/hacking/env-setup > /dev/null
+pip install git+git://github.com/ansible/ansible.git@devel
 
 if [ -f $ANSIBLE_PLAYBOOK ]; then
 
