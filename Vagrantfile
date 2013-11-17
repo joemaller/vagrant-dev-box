@@ -54,11 +54,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     v.customize ["modifyvm", :id, "--ioapic", "on"]
   end
 
-  # Would prefer to have this in an ansible.cfg file, but I wasn't able to get that file
-  # to load from inside the ./vagrant/ansible directory with ENV['ANSIBLE_CFG']
-  # until that works, individual key:value pairs can be set like this:
-  # ENV['ANSIBLE_ERROR_ON_UNDEFINED_VARS'] = "false"
-
   if do_ansible && ansible_up_to_date
     config.vm.provision "ansible" do |ansible|
       ansible.verbose = "v" # 1.3.4 ansible verbosity-flag bug
