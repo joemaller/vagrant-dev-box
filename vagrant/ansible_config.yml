@@ -75,9 +75,10 @@ mysql_root_password: password
 # most cutting edge release (v10)
 max_mysql_compatibility: false
 
-# Fileglob of MySQL dumpfiles to load into the database. 
+# Location of MySQL dumpfiles to load into the database.
 # Existing data is backed up each time the playbook runs.
-mysql_dumpfile_glob: db/*.sql
+mysql_dumpfiles:
+  - db/vagrant.sql
 
 
 ############################################################

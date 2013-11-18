@@ -1,7 +1,7 @@
 ---     
 
 - name: add maridadb apt repo key  #Appears to be idempotent (returns "imported"/"not changed")
-  command: sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xcbcb082a1bb943db
+  command: sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a1bb943db
 
 - name: Add MariaDB 10.0 repository to sources
   apt_repository: repo='deb http://ftp.osuosl.org/pub/mariadb/repo/10.0/ubuntu precise main'
@@ -13,8 +13,19 @@
 
 - name: install mariadb-server 
   apt: name={{ item }} state=installed update_cache=yes
+  when: not max_mysql_compatibility
   with_items: 
     - mariadb-server
+    - python-mysqldb
+
+- name: Install mariadb-server 5.5 (with explicit versions)
+  apt: name={{ item }} state=installed update_cache=yes force=yes
+  when: max_mysql_compatibility
+  with_items:
+    - libmysqlclient18=5.5.33a+maria-1~precise
+    - mysql-common=5.5.33a+maria-1~precise
+    - mariadb-server-5.5
+    - mariadb-client-5.5
     - python-mysqldb
 
 - name: Start MariaDB
@@ -33,4 +44,3 @@
 
 - name: Add default db user
   mysql_user: 'name={{ mysql_username }} password={{ mysql_password }} priv=*.*:ALL state=present'
-
