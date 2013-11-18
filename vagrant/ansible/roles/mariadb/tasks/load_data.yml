@@ -2,7 +2,6 @@
 # Create the database first, otherwise the import step will fail
 - name: Create the database
   mysql_db: name={{ mysql_db_name }} state=present
-  when: mysql_dumpfiles | length > 0
 
 - name: Populate database from dumpfiles
   mysql_db: 
@@ -11,6 +10,5 @@
     target=/vagrant/{{ item }}
     login_user={{ mysql_username }}
     login_password={{ mysql_password }}
-  when: mysql_dumpfiles | length > 0
-  with_items: mysql_dumpfiles
-
+  with_fileglob: 
+    - mysql_dumpfile_glob
