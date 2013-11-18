@@ -14,6 +14,12 @@
     - name: write the motd
       template: src=templates/motd.j2 dest=/etc/motd
 
+    - name: Fix grub timeout
+      lineinfile:
+        dest=/etc/grub.d/00_header
+        regexp="^\s+set timeout=(-1|10)"
+        line="  set timeout=10"
+
     - name: Update apt cache
       apt: update_cache=yes
 
