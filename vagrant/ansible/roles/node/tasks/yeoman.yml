@@ -23,22 +23,7 @@
 
 - name: Install grunt-watch upstart service
   copy: src=grunt-watch.conf dest=/etc/init/grunt-watch.conf
-  
+
 - name: Enable grunt-watch service
   service: name=grunt-watch state=started
   when: gruntfile_stat.stat.exists
-
-
-# # TODO: Convert this to a service? https://github.com/joemaller/vagrant-dev-box/issues/7
-# - name: Kill any pre-existing Grunt processes
-#   command: killall grunt
-#   ignore_errors: yes
-
-# - name: Prepare Grunt watch log file
-#   file: path=/var/log/grunt.log mode=0766
-
-# - name: Run grunt watch in the background (if Gruntfile.js exists)
-#   shell: grunt watch > /var/log/grunt.log chdir={{ gruntfile_filepath | dirname }}
-#   async: 3141592653  #99+ years, will be switchd to 0 when https://github.com/ansible/ansible/pull/4807 is merged
-#   poll: 0
-#   when: gruntfile_stat.stat.exists
