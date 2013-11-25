@@ -4,6 +4,9 @@ module.exports = function (grunt) {
 
     grunt.initConfig({
         watch: {
+            options: {
+                interval: 1000
+            },
             grunt: {
                 files: ['Gruntfile.js']
             },
@@ -22,7 +25,6 @@ module.exports = function (grunt) {
                 options: {
                     livereload: true
                 }
-
             }
         },
         compass: {
@@ -35,4 +37,4 @@ module.exports = function (grunt) {
             }
         }
     });
-}
+};
