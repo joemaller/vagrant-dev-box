@@ -13,10 +13,11 @@ $hostname = "vagrant" if $hostname.empty?
 # pref_interface is an array of adapters in preferred order
 # vm_interfaces is a list of available interfaces
 # we reduce pref_interface against vm_interfaces and go with the first remaining network
-pref_interface = ['en0: Ethernet', 'en2: USB Ethernet', 'en0: Wi-Fi (AirPort)']
+# if no networks match, fallback to the first listed result
+pref_interface = ['en0: Ethernet', 'en2: USB Ethernet', 'en0: Wi-Fi (AirPort)', 'en1: Wi-Fi (AirPort)']
 vm_interfaces = %x( VBoxManage list bridgedifs | grep ^Name ).gsub(/Name:\s+/, '').split("\n")
 pref_interface = pref_interface.map {|n| n if vm_interfaces.include?(n)}.compact
-$network_interface = pref_interface[0]
+$network_interface = pref_interface[0] || false
 
 do_ansible = `ansible-playbook --version` rescue nil
 ansible_up_to_date = false
