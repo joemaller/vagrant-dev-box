@@ -20,6 +20,9 @@
         regexp="^\s+set timeout=(-1|10)"
         line="  set timeout=10"
 
+    - name: Update grub with new recordfail timeout
+      command: update-grub
+
     - name: Update apt cache
       apt: update_cache=yes
 
