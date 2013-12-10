@@ -18,14 +18,11 @@
     - mariadb-server
     - python-mysqldb
 
-- name: Install mariadb-server 5.5 (with explicit versions)
+- name: Install mariadb-server 5.5
   apt: name={{ item }} state=installed update_cache=yes force=yes
   when: max_mysql_compatibility
   with_items:
-    - libmysqlclient18=5.5.33a+maria-1~precise
-    - mysql-common=5.5.33a+maria-1~precise
     - mariadb-server-5.5
-    - mariadb-client-5.5
     - python-mysqldb
 
 - name: Start MariaDB
