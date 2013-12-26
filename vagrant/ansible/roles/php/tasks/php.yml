@@ -8,6 +8,7 @@
   apt: pkg={{ item }} state=installed update_cache=yes
   with_items:
     - php5
+    - php5-curl
     - php5-mysql
     - php5-mcrypt
 
