@@ -16,14 +16,3 @@
 - name: NPM install from package.json (if exists)
   npm: path={{ package_json_filepath  | dirname }} state=latest
   when: package_json_stat.stat.exists
-
-- name: Check for Gruntfile.js file
-  stat: path={{ gruntfile_filepath }}
-  register: gruntfile_stat
-
-- name: Install grunt-watch upstart service
-  copy: src=grunt-watch.conf dest=/etc/init/grunt-watch.conf
-
-- name: Enable grunt-watch service
-  service: name=grunt-watch state=started
-  when: gruntfile_stat.stat.exists

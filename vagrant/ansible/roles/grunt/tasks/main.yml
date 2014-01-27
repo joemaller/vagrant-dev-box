@@ -1,0 +1,16 @@
+---
+
+- name: Install Grunt-cli
+  npm: name=grunt-cli global=yes state=latest
+
+- name: Check for Gruntfile.js file
+  stat: path={{ gruntfile_filepath }}
+  register: gruntfile_stat
+
+- name: Install grunt-watch upstart service
+  copy: src=grunt-watch.conf dest=/etc/init/grunt-watch.conf
+
+- name: Enable grunt-watch service
+  service: name=grunt-watch state=started
+  when: gruntfile_stat.stat.exists
+  when: run_grunt_watch_service

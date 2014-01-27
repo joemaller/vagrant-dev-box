@@ -1,0 +1,15 @@
+---
+
+# for SSHFS mounts, was having permissions issues
+# package_json_filepath: "{{ [synced_folder, ansible_hostname, package_json_file] | join('/') }}"
+# gruntfile_filepath: "{{ [synced_folder, ansible_hostname, gruntfile] | join('/') }}"
+
+
+# fallback to the /vagrant directory for now
+package_json_filepath: /vagrant/{{ package_json_file }}
+gruntfile_filepath: /vagrant/{{ gruntfile }}
+
+
+# Node version to install, 
+node_version: latest
+install_node_version: "{{ node_version if (node_version | lower()) != 'latest' else lookup('pipe', 'wget -q http://nodejs.org/dist/latest/ -O - | egrep -o \\'v(\\.?[0-9])+\\' | head -1') }}"

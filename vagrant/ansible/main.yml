@@ -48,6 +48,7 @@
     - apache
     - php
     - node
+    - grunt
     - { role: mariadb, when: install_mysql }
     - avahi
 

@@ -113,6 +113,9 @@ package_json_file: package.json
 # grunt watch in the background.
 gruntfile: Gruntfile.js
 
+# Run Grunt watch as a background service on the VM
+run_grunt_watch_service: false
+
 # SSH alias for Vagrant's host machine. This is used in the 
 # ssh config file and the sshfs mount command
 host_alias: vagrant-host
