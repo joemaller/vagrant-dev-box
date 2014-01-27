@@ -60,6 +60,10 @@ xhprof_output_dir: /var/tmp/xhprof
 #                     MariaDB (MySQL)                      #
 ############################################################
 
+# Enable the MySQL role. This will install MySQL but won't
+# remove it if the config is changed
+install_mysql: no
+
 # Name of the MySQL database
 mysql_db_name: vagrant
 

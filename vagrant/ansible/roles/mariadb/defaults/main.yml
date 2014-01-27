@@ -1,5 +1,8 @@
 ---
 
+# Enable the MySQL role
+install_mysql: yes
+
 # main MySQL database
 mysql_db_name: vagrant
 
