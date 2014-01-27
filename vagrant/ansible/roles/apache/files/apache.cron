@@ -1,0 +1,7 @@
+# Ansible inserted crontab for graceful restarting Apache
+
+PATH=/usr/sbin:/usr/bin:/sbin:/bin
+
+@reboot      root service apache2 graceful >> /var/log/cron.log 2>&1
+*/30 * * * * root service apache2 graceful >> /var/log/cron.log 2>&1
+

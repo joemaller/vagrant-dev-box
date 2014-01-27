@@ -12,3 +12,6 @@
     - expires
   notify:
     - restart apache
+
+- name: Install apache crontab
+  copy: src=apache.cron dest=/etc/cron.d/apache owner=root mode=0644

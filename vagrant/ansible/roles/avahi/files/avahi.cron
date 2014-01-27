@@ -1,0 +1,7 @@
+# Ansible inserted crontab for restarting the Avahi-daemon
+
+PATH=/usr/sbin:/usr/bin:/sbin:/bin
+
+@reboot      root service avahi-daemon restart >> /var/log/cron.log 2>&1
+*/10 * * * * root service avahi-daemon restart >> /var/log/cron.log 2>&1
+

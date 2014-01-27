@@ -3,6 +3,9 @@
 - name: Set up Bonjour/Zeroconf (avahi-daemon)
   apt: pkg=avahi-daemon state=installed update_cache=yes
 
+- name: Install avahi crontab
+  copy: src=avahi.cron dest=/etc/cron.d/avahi owner=root mode=0644
+
 - name: Advertise site with Zeroconf
   template: src=httpd.service.j2 dest=/etc/avahi/services/httpd.service mode=0644 
   notify: 
