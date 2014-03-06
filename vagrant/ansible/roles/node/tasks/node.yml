@@ -1,7 +1,10 @@
 ---
 
+- set_fact:
+    architecture_fragment: '{{ 86 if ansible_architecture in ["i386"] else 64 }}'
+
 - name: Download node.js tarball
-  get_url: url=http://nodejs.org/dist/{{ install_node_version }}/node-{{ install_node_version }}-linux-x86.tar.gz dest=/tmp/node.tgz force=yes
+  get_url: url=http://nodejs.org/dist/{{ install_node_version }}/node-{{ install_node_version }}-linux-x{{ architecture_fragment }}.tar.gz dest=/tmp/node.tgz force=yes
 
 - name: Install node.js from tarball
   command: tar xzf /tmp/node.tgz --strip-components=1 -C /usr/local
