@@ -3,5 +3,5 @@
 - include: node.yml
   tags: node
 
-- include: yeoman.yml
-  tags: node grunt yeoman yo bower
+- include: misc.yml
+  tags: node compass bower

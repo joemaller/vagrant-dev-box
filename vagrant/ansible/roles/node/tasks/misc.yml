@@ -1,7 +1,7 @@
 ---
 
-- name: Install Yeoman (includes Grunt, Bower and Yo)
-  npm: name=yo global=yes state=latest
+- name: Install Bower
+  npm: name=bower global=yes state=latest
 
 - name: Make sure RubyGems is installed
   apt: pkg=rubygems state=installed update_cache=yes
