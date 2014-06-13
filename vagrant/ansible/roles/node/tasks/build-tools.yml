@@ -1,0 +1,24 @@
+---
+
+- name: Install node.js build tools
+  npm: name={{ item }} global=yes state=latest
+  with_items: 
+    - grunt-cli
+    - gulp
+    - bower
+# - name: Install Yeoman (includes Grunt, Bower and Yo)
+#   npm: name=yo global=yes state=latest
+
+# - name: Make sure RubyGems is installed
+#   apt: pkg=rubygems state=installed update_cache=yes
+
+# - name: Install Compass gem (ruby, includes Sass)
+#   gem: name=compass state=latest user_install=no
+
+- name: Check for package.json file to install from
+  stat: path={{ package_json_filepath }}
+  register: package_json_stat
+
+- name: NPM install from package.json (if exists)
+  npm: path={{ package_json_filepath  | dirname }} state=latest
+  when: package_json_stat.stat.exists

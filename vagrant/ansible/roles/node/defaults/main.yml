@@ -12,4 +12,4 @@ gruntfile_filepath: /vagrant/{{ gruntfile }}
 
 # Node version to install, 
 node_version: latest
-install_node_version: "{{ node_version if (node_version | lower()) != 'latest' else lookup('pipe', 'wget -q http://nodejs.org/dist/latest/ -O - | egrep -o \\'v(\\.?[0-9])+\\' | head -1') }}"
+install_node_version: "{{ node_version if (node_version | lower()) != 'latest' else lookup('pipe', 'curl -s -L http://nodejs.org/dist/latest/ | egrep -o \\'v(\\.?[0-9])+\\' | head -1') }}"

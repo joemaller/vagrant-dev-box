@@ -3,5 +3,5 @@
 - include: node.yml
   tags: node
 
-- include: misc.yml
-  tags: node compass bower
+- include: build-tools.yml
+  tags: node grunt gulp bower
