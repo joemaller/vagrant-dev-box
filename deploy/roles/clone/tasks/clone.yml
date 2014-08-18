@@ -1,0 +1,6 @@
+---
+
+- name: Clone Repository
+  git: 
+    repo={{ git_repo }}
+    dest={{ site_root }}

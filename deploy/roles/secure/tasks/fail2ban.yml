@@ -1,0 +1,31 @@
+---
+
+- name: Install fail2ban
+  apt: pkg=fail2ban state=installed
+
+- stat: path=/etc/fail2ban/jail.local
+  register: jail_local
+
+- name: Copy default jail.local file
+  copy: src=jail.local dest=/etc/fail2ban/jail.local
+  when: not jail_local.stat.exists
+
+- name: Get existing fail2ban ignoreip list
+  shell: grep ignoreip /etc/fail2ban/jail.local | cut -d' ' -f3-
+  register: ignoreip_list
+
+- name: Get controller's IP address
+  shell: echo $SSH_CLIENT | cut -d' ' -f1
+  register: local_ip
+
+- name: Append controller IP to the fail2ban ignoreip list
+  set_fact:
+    ignoreip_list: '{{ ignoreip_list.stdout }} {{ local_ip.stdout }}'
+
+- name: Configure fail2ban
+  template:
+    dest=/etc/fail2ban/jail.local
+    src=jail.local.j2
+
+- name: Restart fail2ban
+  service: name=fail2ban state=restarted

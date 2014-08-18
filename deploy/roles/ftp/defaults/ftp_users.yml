@@ -1,0 +1,5 @@
+---
+
+# Leave this empty. Add actual ftp_users to a top-level ftp_users.yml file
+
+ftp_users: ~

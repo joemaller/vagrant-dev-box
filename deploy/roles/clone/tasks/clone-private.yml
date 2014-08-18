@@ -1,0 +1,21 @@
+---
+
+- command: mktemp ~/.ansible/tmp/key-XXXXX
+  register: temp_private_key
+
+- name: Copy private key to remote machine
+  copy: 
+    src={{ git_private_key }}
+    dest={{ temp_private_key.stdout }}
+
+- name: Clone Private Repository
+  git: 
+    repo={{ git_repo }}
+    dest={{ site_root }}
+    key_file={{ temp_private_key.stdout }}
+    accept_hostkey=yes
+
+- name: Remove the private key
+  file: 
+    path={{ temp_private_key.stdout }}
+    state=absent

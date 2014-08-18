@@ -1,0 +1,22 @@
+# {{ ansible_managed }}
+# based on (first is cached)
+# - http://www.sigerr.org/linux/setup-vsftpd-custom-multiple-directories-users-accounts-ubuntu-step-by-step/
+# - http://www.debiantutorials.com/installing-vsftpd-using-text-file-for-virtual-users-on-squeezewheezy/
+
+listen=YES
+anonymous_enable=NO
+local_enable=YES
+write_enable=YES
+local_umask=022
+virtual_use_local_privs=YES
+guest_enable=YES
+
+chroot_local_user=YES
+hide_ids=YES
+chroot_list_enable=YES
+
+nopriv_user={{ ftp_user }}
+guest_username={{ ftp_user }}
+
+local_root={{ ftp_root }}/$USER
+user_sub_token=$USER

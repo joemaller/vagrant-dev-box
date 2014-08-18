@@ -1,3 +1,0 @@
----
-php_fastcgi: false
-public_web_dir: public

@@ -1,0 +1,9 @@
+---
+
+mysql_username: "{{ site_name }}_db"
+
+mysql_root_password: "{{ lookup('password', '/tmp/mysql_root_pw chars=ascii_letters,hexdigits length=10') }}"
+
+# Generate a random password
+mysql_password: "{{ lookup('password', '/tmp/mysql_pw chars=ascii_letters,hexdigits length=10') }}"
+

@@ -1,0 +1,36 @@
+---
+
+# - name: Add PHP 5 repository
+#   # apt_repository: repo=ppa:ondrej/php5  # php 5.5.x, requires different apache
+#   apt_repository: repo=ppa:ondrej/php5-oldstable  # php 5.4.x
+
+- name: "Install PHP 5"
+  apt: pkg={{ item }} state=installed update_cache=yes
+  with_items:
+    - php5
+    - php5-cli
+    - php5-curl
+    - php5-mysql
+    - php5-mcrypt
+
+- name: Write INI for default time zone
+  template: src=timezone.ini.j2 dest=/etc/php5/mods-available/timezone.ini
+
+- name: Generate error reporting INI -- no errors
+  template: src=error_reporting_none.ini.j2 dest=/etc/php5/mods-available/error_reporting.ini
+
+- name: Enable Mod INIs
+  command: php5enmod {{ item }}
+  with_items: 
+    - mcrypt
+    - timezone
+    - error_reporting
+  notify:
+    - restart apache
+
+- name: Enable Apache2 PHP module
+  command: a2enmod {{ item }}
+  with_items:
+    - php5
+  notify:
+    - restart apache

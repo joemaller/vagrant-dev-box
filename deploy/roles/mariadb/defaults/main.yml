@@ -1,0 +1,4 @@
+---
+
+# Generate a random root database password
+mysql_root_password: "{{ lookup('password', '/tmp/mysql_root_pw chars=ascii_letters,hexdigits length=10') }}"

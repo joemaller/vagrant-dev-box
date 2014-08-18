@@ -1,0 +1,7 @@
+---
+
+- include: clone-private.yml
+  when: git_private_key != false
+
+- include: clone.yml
+  when: not git_private_key

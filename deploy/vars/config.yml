@@ -1,0 +1,32 @@
+---
+# This file contains variables referenced by the included playbooks. 
+
+# Set a nickname for the site, mostly used to create directories
+# site_name: "{{ ansible_hostname }}"
+
+# Name of the admin user account to create on the server
+# admin_user: "{{ site_name }}web"
+
+# Specify the directory which will contain all files used by the web site
+# This is usually where composer.json and package.json files live
+# site_root: "/var/www/{{ site_name }}"
+
+# document_root is the public entry point for the web site
+# eg. {{ site_root }}/index.html or {{ site_root }}/laravel/public
+# document_root: "{{ site_root }}/public"
+# document_root: "{{ site_root }}"
+
+# Install dev tools (php-debug, xhprof, composer dev dependencies)
+# This is always true for Vagrant unless disabled in Vagrantfile
+# dev: true
+
+# The address of the website repository to clone into site_root
+# git_repo: https://github.com/joemaller/vagrant-dev-box.git
+# git_repo: git@github.com:ideasonpurpose/iopweb.git
+
+# Private key to use for cloning private repositories (eg. Github)
+# git_private_key: no
+# git_private_key: /Users/joe/.ssh/id_rsa_deploy
+
+# Location of a sql dumpfile to load into the database
+# sql_dumpfile: 

@@ -1,0 +1,33 @@
+---
+
+- name: Check for dumpfiles
+  stat: path={{ sql_dumpfile }}
+  connection: local
+  sudo: no
+  when: sql_dumpfile is defined
+  register: do_database
+
+- set_fact:
+    do_database: { stat: { exists: no } }
+  when: sql_dumpfile is not defined
+
+- name: Generate random database credentials
+  set_fact: 
+    db_name: "db_{{ ansible_date_time.epoch }}"
+    db_user: "{{ lookup('password', '/tmp/db_user chars=ascii_letters,hexdigits length=6') }}"
+    db_pw: "{{ lookup('password', '/tmp/db_pw chars=ascii_letters,hexdigits length=10') }}"
+  # when: do_database.stat.exists
+
+- mysql_user: 'name={{ db_user }} password={{ db_pw }} priv=*.*:ALL state=present'
+  # when: do_database.stat.exists
+
+- name: Create a new Database
+  mysql_db: name={{ db_name }} state=present
+  # when: do_database.stat.exists
+
+- copy: src={{ sql_dumpfile }} dest=/tmp
+  when: do_database.stat.exists
+
+- name: Load the dumpfile into the new database
+  mysql_db: name={{ db_name }} state=import target=/tmp/{{ sql_dumpfile }}
+  when: do_database.stat.exists

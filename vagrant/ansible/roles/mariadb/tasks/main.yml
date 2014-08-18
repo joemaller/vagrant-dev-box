@@ -1,5 +1,0 @@
----
-
-- include: mariadb.yml
-- include: backup_database.yml
-- include: load_data.yml

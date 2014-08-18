@@ -1,0 +1,4 @@
+---
+
+- name: Lock the root password
+  command: passwd -l root

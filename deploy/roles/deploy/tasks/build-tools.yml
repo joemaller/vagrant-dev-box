@@ -1,0 +1,24 @@
+---
+
+# # TODO: Get rid of this
+# - name: Generate our htaccess file (REFACTOR THIS OUT)
+#   command: '{{ document_root }}/Design\ Assets/scripts/htaccess_localizer.py -p {{ document_root }}'
+
+- name: Install Composer dependencies
+  composer: working_dir={{ site_root }}
+
+  # TODO: Patch the composer module to use sane options (dev=yes instead of no-dev=no)
+  # TODO: Also add description noting the default behavior is NOT to install dev dependencies
+  # https://github.com/ansible/ansible/blob/670068aaad1a46893a263cfcf8721cdaf7c3990c/library/packaging/composer
+- name: Install Composer dev dependencies
+  composer: working_dir={{ site_root }} no_dev=no
+  when: dev
+
+- name: 'npm: Globally install Gulp and Bower'
+  npm: name={{ item }} global=yes
+  with_items:
+    - gulp
+    - bower
+
+- name: 'npm: install everything from package.json'
+  npm: path={{ site_root }}

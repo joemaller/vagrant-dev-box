@@ -1,0 +1,57 @@
+---
+- name: Create primary user as root
+  hosts: all
+  user: '{{ root_user | default("root") }}'
+
+  vars_files:
+    - defaults/main.yml
+    - vars/config.yml
+
+  roles: 
+    - { role: create_user, when: not vagrant, user: "{{admin_user}}", password: "{{ lookup('password', 'vars/user_pw encrypt=sha256_crypt length=12') }}" }
+
+
+- name: Install everything as the admin user with sudo
+  hosts: all
+  user: '{{ admin_user }}'
+  sudo: yes
+
+  vars_files:
+    - defaults/main.yml
+    - vars/config.yml
+
+  pre_tasks:
+    - name: Make sure site_root exists
+      file: path={{ site_root }} state=directory
+
+    - name: Install Git
+      apt: name={{ item }} state=installed update_cache=yes
+      with_items: 
+        - git
+
+  post_tasks: 
+    - name: Remove NOPASSWD from sudoers
+      lineinfile: "dest=/etc/sudoers state=absent regexp='^{{ admin_user }} ALL=\\(ALL\\) NOPASSWD:ALL$' validate='visudo -cf %s'"
+
+  roles: 
+    - { role: clone, when: not vagrant }
+    - { role: secure, when: not vagrant }
+    - apache
+    - node
+    - mariadb
+    - php
+    - { role: php-debug, when: dev }
+    - { role: avahi, when: vagrant }
+    - { role: vagrant, when: vagrant }
+    - deploy
+
+  tasks:
+    # 
+    # Add site-specific tasks here
+    # 
+    # Example:
+    # - name: Make logs writable
+    #   file: 
+    #     path={{ site_root }}/log
+    #     recurse=yes
+    #     mode=0777

@@ -1,0 +1,26 @@
+---
+
+- name: Deactivate the default virtualhost
+  command: a2dissite default
+
+- name: Push our Apache Module virtual host
+  template: src=vhost.j2 dest=/etc/apache2/sites-available/{{ ansible_hostname }} mode=0640
+  when: not php_fastcgi
+
+- name: Push our FastCGI virtual host
+  template: src=fastcgi_vhost.j2 dest=/etc/apache2/sites-available/{{ ansible_hostname }} mode=0640
+  when: php_fastcgi
+
+# - name: Build tree for vhost_document_root link
+#   file: path={{ vhost_document_root | dirname }} state=directory
+#   when: vhost_document_root != "/var/www"
+
+# - name: Link vhost_document_root to /var/www
+#   file: path={{ vhost_document_root }} src=/var/www state=link
+#   when: vhost_document_root != "/var/www"
+
+- name: Activate our virtualhost
+  command: a2ensite {{ ansible_hostname }}
+  notify: 
+    - restart apache
+    - restart avahi

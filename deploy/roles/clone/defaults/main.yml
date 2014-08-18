@@ -1,0 +1,5 @@
+---
+
+git_repo: https://github.com/joemaller/vagrant-dev-box.git
+
+git_private_key: no

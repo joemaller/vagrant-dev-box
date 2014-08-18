@@ -1,7 +1,0 @@
----
-
-- include: node.yml
-  tags: node
-
-- include: build-tools.yml
-  tags: node grunt gulp bower

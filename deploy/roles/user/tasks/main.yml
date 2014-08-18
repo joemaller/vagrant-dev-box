@@ -1,0 +1,4 @@
+---
+  - vars_prompt:
+    - name: username
+      prompt: Enter a new username (default iopadmin)

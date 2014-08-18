@@ -1,0 +1,6 @@
+---
+
+ftp_root: /home/ftp-users
+ftp_user: vsftpd
+
+htpasswd_file: /etc/vsftpd/ftpd.passwd

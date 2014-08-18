@@ -1,0 +1,7 @@
+---
+
+- name: Write Vagrant conf file
+  template: src=vagrant.conf.j2 dest=/etc/apache2/conf-available/vagrant.conf
+
+- name: Enable vagrant.conf
+  command: a2enconf vagrant

@@ -1,0 +1,12 @@
+---
+
+- name: Deactivate all existing virtualhosts
+  command: a2dissite '*'
+
+- name: Push our Apache Module virtual host
+  template: src=vhost.j2 dest=/etc/apache2/sites-available/{{ site_name }}.conf mode=0640
+
+- name: Activate our virtualhost
+  command: a2ensite {{ site_name }}
+  notify: 
+    - restart apache
