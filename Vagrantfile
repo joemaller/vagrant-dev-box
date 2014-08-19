@@ -14,7 +14,11 @@ $hostname = "vagrant" if $hostname.empty?
 # vm_interfaces is a list of available interfaces
 # we reduce pref_interface against vm_interfaces and go with the first remaining network
 # if no networks match, fallback to the first listed result
-pref_interface = ['en0: Ethernet', 'en2: USB Ethernet', 'en0: Wi-Fi (AirPort)', 'en1: Wi-Fi (AirPort)']
+pref_interface = [
+    'en0: Ethernet', 'en1: Ethernet', 'en2: Ethernet',
+    'en0: USB Ethernet', 'en1: USB Ethernet', 'en2: USB Ethernet',
+    'en0: Wi-Fi (AirPort)', 'en1: Wi-Fi (AirPort)', 'en2: Wi-Fi (AirPort)'
+]
 vm_interfaces = %x( VBoxManage list bridgedifs | grep ^Name ).gsub(/Name:\s+/, '').split("\n")
 pref_interface = pref_interface.map {|n| n if vm_interfaces.include?(n)}.compact
 $network_interface = pref_interface[0] || false
@@ -44,7 +48,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provider "virtualbox" do |v|
     # v.gui = true  # for debugging
-    v.customize ["modifyvm", :id, "--memory", 4096] # GraphViz fails with less than 4 GB
+    v.customize ["modifyvm", :id, "--memory", 512] # GraphViz fails with less than 4 GB
     v.customize ["modifyvm", :id, "--name", $hostname]
     v.customize ["modifyvm", :id, "--ioapic", "on"]
   end
