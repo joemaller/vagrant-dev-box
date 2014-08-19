@@ -1,0 +1,11 @@
+{
+    "description": "Placeholder composer.json file",
+    "authors": [
+        {
+            "name": "Joe Maller",
+            "email": "joe@joemaller.com"
+        }
+    ],
+    "require": {},
+    "require-dev": {}
+}
