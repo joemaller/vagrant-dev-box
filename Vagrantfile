@@ -19,52 +19,48 @@ vm_interfaces = %x( VBoxManage list bridgedifs | grep ^Name ).gsub(/Name:\s+/, '
 pref_interface = pref_interface.map {|n| n if vm_interfaces.include?(n)}.compact
 $network_interface = pref_interface[0] || false
 
-do_ansible = `ansible-playbook --version` rescue nil
-ansible_up_to_date = false
-if do_ansible
-  ansible_baseline = Gem::Version.new('1.4')
-  ansible_up_to_date= Gem::Version.new(do_ansible.split()[1]) >= ansible_baseline
-end
-
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.vm.box = "precise32"
-  config.vm.box_url = "http://files.vagrantup.com/precise32.box"
+  config.vm.box = "ubuntu/trusty32"
 
   config.vm.hostname = $hostname
+
+  config.vm.network "forwarded_port", guest: 80, host: 8080, auto_correct: true
 
   # Specifying :bridge with our preferred network lets Vagrant skip
   # "What interface should the network bridge to?" when spinning up the VM
   config.vm.network "public_network", :bridge => $network_interface
 
-  config.vm.network "forwarded_port", guest: 80, host: 8080
-  # define a secondary private network so NFS shares will work correctly
-  # network interfaces are added in order, so this one will map to eth2
+  # Create a private network, which allows host-only access to the machine
+  # using a specific IP.
   config.vm.network "private_network", ip: "192.168.33.10"
 
   # NFS passwords fixed with this: https://gist.github.com/joemaller/6764700
   # NFS is silently ignored under Windows
-  config.vm.synced_folder ".", "/vagrant_synced/" + $hostname, nfs: true
-  # config.vm.synced_folder ".", "/var/www", :nfs => true
+  # config.vm.synced_folder ".", "/vagrant_synced/" + $hostname, nfs: true
+  config.vm.synced_folder ".", "/vagrant_synced/" + $hostname, type: "nfs" #, nfs_export: false
 
   config.vm.provider "virtualbox" do |v|
     # v.gui = true  # for debugging
-    v.customize ["modifyvm", :id, "--memory", 512]
+    v.customize ["modifyvm", :id, "--memory", 4096] # GraphViz fails with less than 4 GB
     v.customize ["modifyvm", :id, "--name", $hostname]
     v.customize ["modifyvm", :id, "--ioapic", "on"]
   end
 
-  if do_ansible && ansible_up_to_date
-    config.vm.provision "ansible" do |ansible|
-      # ansible.verbose = "vvvv"
-      ansible.playbook = "vagrant/ansible/main.yml"
-    end
-  else
-    config.vm.provision "shell" do |shell|
-      shell.path = "vagrant/local-provision.sh"
-    end
+  config.vm.provision "ansible" do |ansible|
+    # ansible.verbose = "vvvv"
+    ansible.playbook = "deploy/main.yml"
+    # Set all Vagrant dependent vars here to override the playbook defaults
+    ansible.extra_vars = {
+        vagrant: true,
+        dev: true,
+        root_user: "vagrant",
+        admin_user: "vagrant",
+        site_name: $hostname,
+        site_root: "/vagrant_synced/" + $hostname,
+    }
   end
 
 end
