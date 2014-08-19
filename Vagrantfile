@@ -20,8 +20,12 @@ pref_interface = [
     'en0: Wi-Fi (AirPort)', 'en1: Wi-Fi (AirPort)', 'en2: Wi-Fi (AirPort)'
 ]
 vm_interfaces = %x( VBoxManage list bridgedifs | grep ^Name ).gsub(/Name:\s+/, '').split("\n")
-pref_interface = pref_interface.map {|n| n if vm_interfaces.include?(n)}.compact
+pref_interface = vm_interfaces.map {|n| n if pref_interface.include?(n)}.compact
 $network_interface = pref_interface[0] || false
+
+if $network_interface
+    puts "public_network will be bridged to #{$network_interface}"
+end
 
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
