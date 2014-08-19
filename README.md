@@ -1,68 +1,161 @@
-vagrant-dev-box
-===============
 
-This is a baseline Vagrant project for web development. It's growing from a common base VM, the goal being to centralize customization so different sites can be spun up quickly with a modular, dependable toolset. 
-
-### Instructions
-
-If everything works, this is pretty much it:
-
-1. Clone this repository
-2. `Vagrant up`
-
-Some Windows machines will need to manually run the provisioner with `vagrant provision` also. (Windows is probably broken right now.)
-
-The VM can be fully configured with settings in the [vagrant/ansible_config.yml][ansible_config] file. Start there if you need to customize something. 
-
-###Experimental SSHFS shared directory
-The latest commits switched to using SSHFS to mount the shared folder that Apache serves from. This hasn't been extensively tested yet, but I'm starting to use this across all my projects so any kinks should be worked out shortly. 
-
-SSH must be enabled on the host machine for this to work. 
-
-### What's included
-
-The software stack isn't revolutionary, but it works well:
-
-* Apache 2.2.x
-* PHP 5.4.x
-* MariaDB
-* Node.js with Yeoman (Grunt, Bower and Yo)
-
-PHP Debugging tools are included (and can be disabled):
-
-* [Xdebug][]
-* [XHProf][]
-
-The VM includes [Avahi][], so the server will advertise itself over Bonjour/Zeroconf. (not working on Windows)
+This is a baseline playbook intended to provide a single solution for deploying to a production server or Vagrant-based virtual machine. Very few settings need to be changed and all options can be set in the `/vars/config.yml` file.
 
 
-###Prerequisites
 
-* [Vagrant][] (tested on version 1.3.5)
-* [VirtualBox][] (Windows has problems with version 4.3.0, stick with 4.2.18)
-* [Git][]
+This is still chasing the theory that there can be a single, dependable development and production environment which can be spun up quickly for experiments or shared work.
 
-You'll probably want to install [Ansible][] too. Seriously, it's awesome.
+## Prerequisites
+To make this work, the following should be installed. For Python dependencies, I usually install into a virtualenv.
 
-### Ansible Development version
-The Ansible provisioning playbooks currently use features from Ansible 1.4, which is still being actively developed. The easiest way I've found to deal with this in one shot is to Pip-install Ansible directly from Github:
+* Vagrant
+* VirtualBox
+* Ansible
+
+Do this:
+1. Install Vagrant
+
+Full instructions below.
+
+# Deploy instrtuctions
+
+My intention for this project is to have a baseline box up and running with virtually no fiddling. From an initial checkout, the project will create a functional Vagrant box without modifying the default settings. 
     
-    pip install git+git://github.com/ansible/ansible.git@devel 
+    $ git clone https://github.com/joemaller/vagrant-dev-box.git
+    $ cd vagrant-dev-box
+    $ vagrant up
 
-Note that installing directly from Github will break requirements.txt files since the repository information is not stored in the file. 
+Add a hosts file and the same playbook can configure a remote server (tested with [Digital Ocean][do] and [Linode][]). (make sure you've first set up ssh-key logins manually or with `ssh-copy-id`)
 
-The other option is to install the release-version of Ansible with Pip to take care of dependencies, then clone Ansible from [github/ansible](https://github.com/ansible/ansible) and then run `source ansible/hacking/env-setup`
+    $ ssh-copy-id root@123.45.67.89
+    $ echo 123.45.67.89 > hosts
+    $ ansible-playbook deploy/main.yml -i hosts
 
-### Caveats
+From here, it's very easy to modify the handful of configuration settings to customize the server. Below is a description of each setting.
 
-This is a work in progress. Most testing and development is done on Macs, it's checked on Windows every once in a while.
+Any additional tasks specific to a given deployment should be entered into the bottom Tasks section of the `main.yml` playbook.
 
-[git]: http://git-scm.com
-[ansible]: http://www.ansibleworks.com/
-[vagrant]: http://www.vagrantup.com/
-[virtualbox]: https://www.virtualbox.org/
-[ansible_config]: https://github.com/joemaller/vagrant-dev-box/blob/master/vagrant/ansible_config.yml
+### Configuration Settings
 
-[avahi]: http://en.wikipedia.org/wiki/Avahi_%28software%29
-[xhprof]: https://github.com/facebook/xhprof
+`site_name`
+: A nickname for the site, defaults to the server's hostname
+
+`admin_user`
+: Name of the admin user, defaults to `{{ sitename }}web`
+
+`site_root`
+: Directory containing all the files used by a web site. This is usually where files like `composer.json` or `package.json` live.
+
+`document_root`
+: The public entry point for a web site. Usually a subfolter of `site_root`, something like `{{ site_root }}/app` or `{{ site_root }}/web`. Defaults to `{{ site_root }}/public`.
+
+`dev`
+: Set this to true to install dev tools like [XHProf][], [PHPUnit][] and [Xdebug][] as well as any dev-dependencies in `composer.json`. Defaults to true when provisioning Vagrant boxes.
+
+`git_repo`
+: Address of a Git repository to deploy to the server. Vagrant skips this step and uses the current directory instead. Repository urls should use `https` or they will be assumed to be private.
+
+`git_private_key`
+: SSH private key to use when checking out a private repository from Github.
+
+`sql_dumpfile`
+: Location of a sql dumpfile to load into the database. 
+
+### What gets installed
+
+Though Ansible playbooks are highly-readable, here's a semi-brief rundown of everything that gets installed and configured:
+
+1. Create admin user
+2. Make sure the `site_root` directory exists
+3. Install Git
+4. Clone `git_repo` into `site_root` (if not Vagrant)
+5. Secure the server (if not Vagrant)
+    - Install fail2ban
+    - Lock the root password
+6. Install Apache2
+    - Install mod-rewrite, mod-expires and mod-headers
+    - Deactivate existing Virtual Hosts
+    - Enable a new Virtual Host
+7. Install node.js
+8. Install MariaDB
+    - Generate a random root password
+    - Setup root `.my.conf`
+    - remote the MySQL test database
+9. Install [vsftp][] and configure FTP virtual users
+10. Install PHP
+    - Including php-cli, php-curl, php-mcrypt and php-mysql
+    - Setup default timezone
+    - Turn off all errors
+    - Install Composer
+11. Install PHP debug tools (if dev==true, default true for Vagrant)
+    - Enable all errors
+    - Install xDebug, PHPUnit, and XHProf and Composer dev-dependencies
+12. Install and configure Avahi (aka Bonjour/Zeroconf, only Vagrant)
+13. Configure Apache to work from Vagrant's shared directory
+14. Generate a new database and populate with dumpfile (if exists)
+15. Globally install Gulp and Bower
+16. Install Composer dependencies (and optionally dev-dependencies) from `composer.json`
+17. Install everything from `package.json`
+
+
+
+### Checking out private repositories from Github
+
+The playbooks are able to clone private repositories from Github. To do this, you'll need an authentication keypair already registered with Github. In the vars/config.yml file, set `git_repo` to the ssh address of the private repository and set `git_private_key` to the private key's path on the controller. 
+
+Note that private repository urls should be formatted as `git@github.com:user/repo`, and *not* `ssh://git@github.com:user/repo`.
+
+### Additional Notes
+
+#### The Playbooks
+The playbooks are designed around Ubuntu/Debian flavored servers, software is installed with **apt** and all testing was done on Ubuntu 14.
+
+#### Databases
+Rather than risk obliterating any current database, existing dumpfiles will be loaded into a new database alongside whatever was in use. This way rolling back the database is as simple as switching the webapp's configuration to point at a different database. While wasteful of disk space and not strictly idempotent, this seemed like the safest course of action.
+
+#### Security
+Non-vagrant servers are secured using recommendations from [Linode][linode secure] and [Digital Ocean][do secure]. These include the following:
+
+* Create an admin user with a random password
+* Lock out root-user password logins with 'passwd -l root'
+* Install [Fail2Ban][]. 
+
+It would be nice to change the default ssh port as well, but doing that in an idempotent way with Ansible doesn't seem possible.
+
+## Full setup instructions
+
+If you're setting up a clean mac system, here is every step necessary to get up and running.
+
+1. Install [Xcode][], then open it and accept the user license agreement.
+2. Download and install [VirtualBox][]
+3. Download and install [Vagrant][]
+4. Install [Homebrew][]
+5. `brew install git nodejs ansible`
+6. `vagrant up`
+
+Note: You'll have to enter your password so Vagrant can configure the shared folder interfaces correctly. To skip this, you can add [the following commands][sudoers] to `/etc/sudoers` (use [`visudo`][visudo]:
+
+    Cmnd_Alias VAGRANT_EXPORTS_ADD = /usr/bin/tee -a /etc/exports
+    Cmnd_Alias VAGRANT_NFSD = /sbin/nfsd restart
+    Cmnd_Alias VAGRANT_EXPORTS_REMOVE = /usr/bin/sed -E -e /*/ d -ibak /etc/exports
+    %admin ALL=(root) NOPASSWD: VAGRANT_EXPORTS_ADD, VAGRANT_NFSD, VAGRANT_EXPORTS_REMOVE
+
+A much more versatile installation would use [virtualenvwrapper][] and [nodeenv][], these then create isolated development environments for each project. 
+
+[do]: http://digitalocean.com
+[linode]: http://linode.com
+[linode secure]: https://www.linode.com/docs/security/securing-your-server/
+[do secure]: https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-12-04
+[fail2ban]: http://www.fail2ban.org/
+
+[xhprof]: https://github.com/phacility/xhprof
 [xdebug]: http://xdebug.org/
+[phpunit]: http://phpunit.de/
+[virtualenvwrapper]: http://virtualenvwrapper.readthedocs.org/
+[nodeenv]: http://ekalinin.github.io/nodeenv/
+[homebrew]: http://brew.sh
+
+[xcode]: https://itunes.apple.com/us/app/xcode/id497799835?mt=12
+[vagrant]: http://www.vagrantup.com/downloads.html
+[virtualbox]: https://www.virtualbox.org/wiki/Downloads
+[sudoers]: http://docs.vagrantup.com/v2/synced-folders/nfs.html
