@@ -57,6 +57,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     v.customize ["modifyvm", :id, "--ioapic", "on"]
   end
 
+  config.vm.provision "shell", run: "always" do |s|
+	s.inline = "sed --quiet --in-place --regexp-extended '/dowait 120/'d /etc/init/cloud-init-nonet.conf"
+  end
+
   config.vm.provision "ansible" do |ansible|
     # ansible.verbose = "vvvv"
     ansible.playbook = "deploy/main.yml"
