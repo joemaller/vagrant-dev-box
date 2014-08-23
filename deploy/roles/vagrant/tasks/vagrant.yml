@@ -5,3 +5,10 @@
 
 - name: Enable vagrant.conf
   command: a2enconf vagrant
+
+- name: Remove the 120 second boot timeout from /etc/init/cloud-init-nonet.conf
+  lineinfile: "
+    dest=/etc/init/cloud-init-nonet.conf
+    line='# dowait 120 # disabled for Vagrant'
+    regexp='^#?\\s*dowait\\s+120'
+    state=present"
