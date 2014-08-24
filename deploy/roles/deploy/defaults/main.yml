@@ -1,5 +1,7 @@
 ---
 
+composer_dir: "{{ site_root }}"
+
 mysql_username: "{{ site_name }}_db"
 
 mysql_root_password: "{{ lookup('password', '/tmp/mysql_root_pw chars=ascii_letters,hexdigits length=10') }}"
