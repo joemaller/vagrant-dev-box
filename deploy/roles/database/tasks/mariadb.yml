@@ -2,21 +2,27 @@
 
 - name: Add MariaDB repo key
   apt_key: keyserver=hkp://keyserver.ubuntu.com:80 id=0xcbcb082a1bb943db
+  when: engine | lower == "mariadb"
 
 - name: Add MariaDB repository to sources
   apt_repository: repo='deb http://nyc2.mirrors.digitalocean.com/mariadb/repo/10.0/ubuntu trusty main'
+  when: engine | lower == "mariadb"
+
+- name: Install Python MySQL library
+  apt: name=python-mysqldb update_cache=yes
 
 - name: install mariadb-server 
-  apt: name={{ item }} state=installed update_cache=yes
-  with_items: 
-    - mariadb-server
-    - python-mysqldb
+  apt: name=mariadb-server
+  when: engine | lower == "mariadb"
+
+- name: install MySQL-server 
+  apt: name=mysql-server
+  when: engine | lower == "mysql"
 
 - set_fact:
     mysql_root_password: "{{ mysql_root_password }}"
 
-- name: Start MariaDB
-  service: name=mysql state=started
+- service: name=mysql state=started
 
 - name: update mysql root password for all root accounts
   mysql_user: 'name=root host={{ item }} password={{ mysql_root_password }} priv=*.*:ALL,GRANT'

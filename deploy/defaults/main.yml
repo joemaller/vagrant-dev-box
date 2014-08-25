@@ -8,3 +8,4 @@ document_root: "{{ site_root }}/public"
 vagrant: false
 git_private_key: no
 git_repo: https://github.com/joemaller/vagrant-dev-box.git
+database_engine: mariadb

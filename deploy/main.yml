@@ -38,7 +38,7 @@
     - { role: secure, when: not vagrant }
     - apache
     - node
-    - mariadb
+    - database
     - php
     - { role: php-debug, when: dev }
     - { role: avahi, when: vagrant }
