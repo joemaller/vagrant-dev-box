@@ -6,18 +6,13 @@ This is a baseline playbook intended to provide a single solution for deploying 
 This is still chasing the theory that there can be a single, dependable development and production environment which can be spun up quickly for experiments or shared work.
 
 ## Prerequisites
-To make this work, the following should be installed. For Python dependencies, I usually install into a virtualenv.
+The following software packages should be installed, full instructions are below:
 
 * Vagrant
 * VirtualBox
 * Ansible
 
-Do this:
-1. Install Vagrant
-
-Full instructions below.
-
-# Deploy instrtuctions
+# Deploy Instructions
 
 My intention for this project is to have a baseline box up and running with virtually no fiddling. From an initial checkout, the project will create a functional Vagrant box without modifying the default settings. 
     
@@ -37,31 +32,40 @@ Any additional tasks specific to a given deployment should be entered into the b
 
 ### Configuration Settings
 
-`site_name`
-: A nickname for the site, defaults to the server's hostname
+* **`site_name`**  
+    A nickname for the site, defaults to the server's hostname
 
-`admin_user`
-: Name of the admin user, defaults to `{{ sitename }}web`
+* **`admin_user`**  
+    Name of the admin user, defaults to `{{ sitename }}web`
 
-`site_root`
-: Directory containing all the files used by a web site. This is usually where files like `composer.json` or `package.json` live.
+* **`site_root`**  
+    Directory containing all the files used by a web site. This is usually where files like `composer.json` or `package.json` live.
 
-`document_root`
-: The public entry point for a web site. Usually a subfolter of `site_root`, something like `{{ site_root }}/app` or `{{ site_root }}/web`. Defaults to `{{ site_root }}/public`.
+* **`document_root`**  
+    The public entry point for a web site. Usually a subfolter of `site_root`, something like `{{ site_root }}/app` or `{{ site_root }}/web`. Defaults to `{{ site_root }}/public`.
 
-`dev`
-: Set this to true to install dev tools like [XHProf][], [PHPUnit][] and [Xdebug][] as well as any dev-dependencies in `composer.json`. Defaults to true when provisioning Vagrant boxes.
+* **`dev`**  
+    Set this to true to install dev tools like [XHProf][], [PHPUnit][] and [Xdebug][] as well as any dev-dependencies in `composer.json`. Defaults to true when provisioning Vagrant boxes.
 
-`git_repo`
-: Address of a Git repository to deploy to the server. Vagrant skips this step and uses the current directory instead. Repository urls should use `https` or they will be assumed to be private.
+* **`git_repo`**  
+    Address of a Git repository to deploy to the server. Vagrant skips this step and uses the current directory instead. Repository urls should use `https` or they will be assumed to be private.
 
-`git_private_key`
-: SSH private key to use when checking out a private repository from Github.
+* **`git_private_key`**  
+    SSH private key to use when checking out a private repository from Github.
 
-`sql_dumpfile`
-: Location of a sql dumpfile to load into the database. 
+* **`sql_dumpfile`**  
+    Location of a sql dumpfile to load into the database. 
 
-### What gets installed
+#### Additional Settings
+
+* **`composer_dir`**  
+    Specify the location of `composer.json`, can be used to accommodate Laravel's default install layout. Defaults to `{{ site_root }}`.
+
+* **`database_engine`**  
+    Choose between MariaDB or MySQL. Defaults to `mariadb`
+
+
+## What gets installed
 
 Though Ansible playbooks are highly-readable, here's a semi-brief rundown of everything that gets installed and configured:
 
@@ -77,11 +81,11 @@ Though Ansible playbooks are highly-readable, here's a semi-brief rundown of eve
     - Deactivate existing Virtual Hosts
     - Enable a new Virtual Host
 7. Install node.js
-8. Install MariaDB
+8. Install MariaDB (or MySQL)
     - Generate a random root password
     - Setup root `.my.conf`
     - remote the MySQL test database
-9. Install [vsftp][] and configure FTP virtual users
+9. Install [vsftpd][] and configure FTP virtual users
 10. Install PHP
     - Including php-cli, php-curl, php-mcrypt and php-mysql
     - Setup default timezone
@@ -111,7 +115,7 @@ Note that private repository urls should be formatted as `git@github.com:user/re
 The playbooks are designed around Ubuntu/Debian flavored servers, software is installed with **apt** and all testing was done on Ubuntu 14.
 
 #### Databases
-Rather than risk obliterating any current database, existing dumpfiles will be loaded into a new database alongside whatever was in use. This way rolling back the database is as simple as switching the webapp's configuration to point at a different database. While wasteful of disk space and not strictly idempotent, this seemed like the safest course of action.
+Rather than risk obliterating any current database, existing dumpfiles are loaded into a new database alongside whatever was in use. This way rolling back the database is as simple as switching the webapp's configuration to point at a different database. While wasteful of disk space and not strictly idempotent, this seemed like the safest course of action.
 
 #### Security
 Non-vagrant servers are secured using recommendations from [Linode][linode secure] and [Digital Ocean][do secure]. These include the following:
@@ -140,7 +144,7 @@ Note: You'll have to enter your password so Vagrant can configure the shared fol
     Cmnd_Alias VAGRANT_EXPORTS_REMOVE = /usr/bin/sed -E -e /*/ d -ibak /etc/exports
     %admin ALL=(root) NOPASSWD: VAGRANT_EXPORTS_ADD, VAGRANT_NFSD, VAGRANT_EXPORTS_REMOVE
 
-A much more versatile installation would use [virtualenvwrapper][] and [nodeenv][], these then create isolated development environments for each project. 
+A more versatile installation would use [virtualenvwrapper][] and [nodeenv][], these then create isolated development environments for each project. 
 
 [do]: http://digitalocean.com
 [linode]: http://linode.com
@@ -154,6 +158,8 @@ A much more versatile installation would use [virtualenvwrapper][] and [nodeenv]
 [virtualenvwrapper]: http://virtualenvwrapper.readthedocs.org/
 [nodeenv]: http://ekalinin.github.io/nodeenv/
 [homebrew]: http://brew.sh
+[vsftpd]: https://security.appspot.com/vsftpd.html
+
 
 [xcode]: https://itunes.apple.com/us/app/xcode/id497799835?mt=12
 [vagrant]: http://www.vagrantup.com/downloads.html
