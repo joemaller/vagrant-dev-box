@@ -25,9 +25,17 @@
   mysql_db: name={{ db_name }} state=present
   # when: do_database.stat.exists
 
-- copy: src={{ sql_dumpfile }} dest=/tmp
+- command: mktemp /tmp/dumpfile-XXXXX
+  register: dumpfile_temp
+
+- copy: src={{ sql_dumpfile }} dest={{ dumpfile_temp.stdout }}
   when: do_database.stat.exists
 
 - name: Load the dumpfile into the new database
-  mysql_db: name={{ db_name }} state=import target=/tmp/{{ sql_dumpfile }}
+  mysql_db:
+    name={{ db_name }}
+    state=import
+    target={{ dumpfile_temp.stdout }}
   when: do_database.stat.exists
+
+- file: path={{ dumpfile_temp.stdout }} state=absent
