@@ -2,7 +2,7 @@
 
 - name: "Install PHP 5 Dev and GraphViz"
   apt: pkg={{ item }} state=installed update_cache=yes
-  with_items: 
+  with_items:
     - php-pear
     - php5-dev
     - graphviz
@@ -13,12 +13,14 @@
     - pear
     - pecl
 
-# This following steps are a workaround for trouble installing Pear stuff with PHP 5.5
+# The following steps are a workaround for trouble installing Pear stuff with PHP 5.5
 # http://stackoverflow.com/a/23824148/503463
 # https://bugs.launchpad.net/ubuntu/+source/php5/+bug/1310552 (comment 5)
-# 
+
 - name: Download the XHProf tarball
-  get_url: url=http://pecl.php.net/get/xhprof-0.9.4.tgz dest=/tmp/xhprof-0.9.4.tgz
+  get_url:
+    url=http://pecl.php.net/get/xhprof-0.9.4.tgz
+    dest=/tmp/xhprof-0.9.4.tgz
 
 - name: Manually unzip the archive
   command: gunzip -f /tmp/xhprof-0.9.4.tgz
@@ -27,12 +29,20 @@
   command: pear install /tmp/xhprof-0.9.4.tar
 
 - name: Create XHProf directory
-  file: dest=/var/tmp/xhprof state=directory mode=0777 owner=www-data group=www-data
+  file:
+    dest=/var/tmp/xhprof
+    state=directory
+    mode=0777
+    owner=www-data
+    group=www-data
 
 - name: Write XHProf mod INI
-  template: src=xhprof.ini.j2 dest=/etc/php5/mods-available/xhprof.ini mode=0644
+  copy:
+    src=xhprof.ini
+    dest=/etc/php5/mods-available/xhprof.ini
+    mode=0644
 
 - name: Enable XHProf INI
   command: php5enmod xhprof
-  notify: 
+  notify:
     - restart apache
