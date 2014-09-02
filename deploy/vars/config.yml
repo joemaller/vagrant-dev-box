@@ -1,5 +1,5 @@
 ---
-# This file contains variables referenced by the included playbooks. 
+# This file contains variables referenced by the included playbooks.
 
 # Set a nickname for the site, mostly used to create directories
 # site_name: "{{ ansible_hostname }}"
@@ -16,6 +16,9 @@
 # document_root: "{{ site_root }}/public"
 # document_root: "{{ site_root }}"
 
+# Set the PHP timezone
+# php_timezone: America/New_York
+
 # Install dev tools (php-debug, xhprof, composer dev dependencies)
 # This is always true for Vagrant unless disabled in Vagrantfile
 # dev: true
@@ -29,4 +32,4 @@
 # git_private_key: /Users/joe/.ssh/id_rsa_deploy
 
 # Location of a sql dumpfile to load into the database
-# sql_dumpfile: 
+# sql_dumpfile:
