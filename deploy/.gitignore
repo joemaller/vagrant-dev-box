@@ -1,0 +1,4 @@
+*.pyc
+hosts
+vars/user_pw
+vars/ftp_users.yml
