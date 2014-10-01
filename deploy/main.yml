@@ -24,9 +24,10 @@
     - name: Make sure site_root exists
       file: path={{ site_root }} state=directory
 
-    - name: Install Git
+    - name: 'Install Git and build-essential (compilers, etc.)'
       apt: name={{ item }} state=installed update_cache=yes
-      with_items: 
+      with_items:
+        - build-essential
         - git
 
   post_tasks:
