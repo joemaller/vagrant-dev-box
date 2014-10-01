@@ -7,7 +7,7 @@
     - defaults/main.yml
     - vars/config.yml
 
-  roles: 
+  roles:
     - { role: create_user, when: not vagrant, user: "{{admin_user}}", password: "{{ lookup('password', 'vars/user_pw encrypt=sha256_crypt length=12') }}" }
 
 
@@ -29,11 +29,11 @@
       with_items: 
         - git
 
-  post_tasks: 
+  post_tasks:
     - name: Remove NOPASSWD from sudoers
       lineinfile: "dest=/etc/sudoers state=absent regexp='^{{ admin_user }} ALL=\\(ALL\\) NOPASSWD:ALL$' validate='visudo -cf %s'"
 
-  roles: 
+  roles:
     - { role: clone, when: not vagrant }
     - { role: secure, when: not vagrant }
     - apache
@@ -46,12 +46,12 @@
     - deploy
 
   tasks:
-    # 
+    #
     # Add site-specific tasks here
-    # 
+    #
     # Example:
     # - name: Make logs writable
-    #   file: 
+    #   file:
     #     path={{ site_root }}/log
     #     recurse=yes
     #     mode=0777
