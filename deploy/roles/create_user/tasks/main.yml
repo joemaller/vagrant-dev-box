@@ -4,7 +4,7 @@
   user:
     name={{ user }}
     password={{ password }}
-    groups=sudo,www-data
+    groups=sudo,www-data,syslog
     append=yes
     shell=/bin/bash
 
@@ -18,4 +18,16 @@
   shell: cat ~/.ssh/authorized_keys > {{ auth_keys.keyfile }}
 
 - name: Add admin user to sudoers
-  lineinfile: "dest=/etc/sudoers state=present regexp='^{{ user }}' line='{{ user }} ALL=(ALL) NOPASSWD:ALL' validate='visudo -cf %s'"
+  lineinfile: 
+    dest=/etc/sudoers
+    state=present
+    regexp='^{{ user }}'
+    line='{{ user }} ALL=(ALL) NOPASSWD:ALL'
+    validate='visudo -cf %s'
+
+- name: Set system umask to 0002
+  lineinfile: 
+    dest=/etc/login.defs
+    regexp='^UMASK\s+\d+'
+    line='UMASK           002'
+    state=present

@@ -8,7 +8,7 @@
 # admin_user: "{{ site_name }}web"
 
 # Specify the directory which will contain all files used by the web site
-# This is usually where composer.json and package.json files live
+# This is usually where the composer.json and package.json files live
 # site_root: "/var/www/{{ site_name }}"
 
 # document_root is the public entry point for the web site

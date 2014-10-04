@@ -21,7 +21,7 @@
   user: 
     name={{ ftp_user }}
     home={{ ftp_root }}
-    group=nogroup
+    group=www-data
     shell=/bin/false
 
 - name: Make sure the password file directory exists

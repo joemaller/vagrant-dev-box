@@ -1,0 +1,9 @@
+---
+
+- name: chown web directory to admin user
+  file: 
+    path={{ site_root }}
+    owner=www-data
+    group=www-data
+    mode=0774
+    recurse=yes

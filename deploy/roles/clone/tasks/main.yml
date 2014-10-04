@@ -5,3 +5,5 @@
 
 - include: clone.yml
   when: not git_private_key
+
+- include: permissions.yml
