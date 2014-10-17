@@ -24,6 +24,12 @@
     - name: Make sure site_root exists
       file: path={{ site_root }} state=directory
 
+    - name: install python-software-properties (required for apt-add-repository)
+      apt: pkg=python-software-properties state=installed
+
+    - name: Add git-core ppa
+      apt_repository: repo='ppa:git-core/ppa'
+
     - name: 'Install Git and build-essential (compilers, etc.)'
       apt: name={{ item }} state=installed update_cache=yes
       with_items:
