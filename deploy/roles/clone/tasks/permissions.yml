@@ -1,9 +1,9 @@
 ---
 
-- name: chown web directory to admin user
-  file: 
+- name: 'chown web directory to admin_user:www-data'
+  file:
     path={{ site_root }}
-    owner=www-data
+    owner={{ admin_user }}
     group=www-data
-    mode=0774
     recurse=yes
+    # mode=0774
