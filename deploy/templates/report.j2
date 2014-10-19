@@ -1,21 +1,28 @@
 
-The playbook deployed successfully.
+
+The playbook deployed successfully to the following hosts:
+{% for host in vars['play_hosts'] %}
+- {{ host }}
+{% endfor %}
+
 
 Admin User Account
 username:      {{ admin_user }}
 password:      {{ (lookup('file', 'vars/user_pw') | split)[0] }}
 
-{% if do_database.stat.exists -%}
-The dumpfile {{ sql_dumpfile }} was loaded into the database `{{ db_name }}` with the following credentials:
 
 Database
 db name:       {{ db_name }}
 db username:   {{ db_user }}
 db password:   {{ db_pw }}
-{%- endif %}
+connect:       mysql -u{{ db_user }} -p{{ db_pw }} {{ db_name }}
+{% if do_database.stat.exists %}
 
+The dumpfile `{{ sql_dumpfile }}` was successfully loaded into the new database `{{ db_name }}`.
+{% endif %}
 
-{% if ftp_users or ftp_admin_users -%}
+{% if ftp_user is defined or ftp_admin_users is defined %}
+
 The Following FTP accounts were setup:
 
 {% endif %}
@@ -26,7 +33,7 @@ password:      {{ ftp_user.password }}
 
 {% endfor -%}
 {% endif %}
-{% if ftp_users is iterable -%}
+{% if ftp_user is defined and ftp_user is iterable -%}
 {%- for ftp_user in ftp_users -%}
 FTP User:      {{ ftp_user.username }}
 password:      {{ ftp_user.password }}
@@ -35,3 +42,5 @@ password:      {{ ftp_user.password }}
 {% endif %}
 
 {{ ansible_managed }}
+
+

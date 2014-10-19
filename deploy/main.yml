@@ -40,6 +40,18 @@
     - name: Remove NOPASSWD from sudoers
       lineinfile: "dest=/etc/sudoers state=absent regexp='^{{ admin_user }} ALL=\\(ALL\\) NOPASSWD:ALL$' validate='visudo -cf %s'"
 
+    - name: Generate report
+      template: src=templates/report.j2 dest=/tmp/ansible_report
+      sudo: no
+      connection: local
+
+    - debug:
+        msg=" {{ lookup('file', '/tmp/ansible_report')}} "
+
+    - file: path=/tmp/ansible_report state=absent
+      sudo: no
+      connection: local
+
   roles:
     - { role: clone, when: not vagrant }
     - { role: secure, when: not vagrant }
