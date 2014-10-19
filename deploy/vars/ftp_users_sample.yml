@@ -1,7 +1,10 @@
 ---
 
 # Rename this file `ftp_users.yml` and add username:password pairs. This file
-# contains plaintext passwords and should be excluded from source control. 
+# contains plaintext passwords and should be excluded from source control.
 
 ftp_users:
   - { username: joe_user, password: password }
+
+ftp_admin_users:
+  - { username: joe_admin, password: password }
