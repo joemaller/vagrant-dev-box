@@ -1,0 +1,37 @@
+
+The playbook deployed successfully.
+
+Admin User Account
+username:      {{ admin_user }}
+password:      {{ (lookup('file', 'vars/user_pw') | split)[0] }}
+
+{% if do_database.stat.exists -%}
+The dumpfile {{ sql_dumpfile }} was loaded into the database `{{ db_name }}` with the following credentials:
+
+Database
+db name:       {{ db_name }}
+db username:   {{ db_user }}
+db password:   {{ db_pw }}
+{%- endif %}
+
+
+{% if ftp_users or ftp_admin_users -%}
+The Following FTP accounts were setup:
+
+{% endif %}
+{% if ftp_admin_users is defined and ftp_admin_users is iterable -%}
+{%- for ftp_user in ftp_admin_users -%}
+FTP Admin:     {{ ftp_user.username }}
+password:      {{ ftp_user.password }}
+
+{% endfor -%}
+{% endif %}
+{% if ftp_users is iterable -%}
+{%- for ftp_user in ftp_users -%}
+FTP User:      {{ ftp_user.username }}
+password:      {{ ftp_user.password }}
+
+{% endfor %}
+{% endif %}
+
+{{ ansible_managed }}

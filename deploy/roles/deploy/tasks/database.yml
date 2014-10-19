@@ -11,9 +11,14 @@
     do_database: { stat: { exists: no } }
   when: sql_dumpfile is not defined
 
+- name: Generate new db_name
+  shell: echo db_{{ ansible_date_time.epoch }} > /tmp/db_name
+  sudo: no
+  connection: local
+
 - name: Generate random database credentials
-  set_fact: 
-    db_name: "db_{{ ansible_date_time.epoch }}"
+  set_fact:
+    db_name: "{{ lookup('file', '/tmp/db_name') }}"
     db_user: "{{ lookup('password', '/tmp/db_user chars=ascii_letters,hexdigits length=6') }}"
     db_pw: "{{ lookup('password', '/tmp/db_pw chars=ascii_letters,hexdigits length=10') }}"
   # when: do_database.stat.exists
