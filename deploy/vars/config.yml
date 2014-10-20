@@ -16,7 +16,8 @@
 # document_root: "{{ site_root }}/public"
 # document_root: "{{ site_root }}"
 
-# Set the PHP timezone
+# Set the PHP timezone (defaults is America/New_York)
+# Available timezones: http://php.net/manual/en/timezones.php
 # php_timezone: America/New_York
 
 # Install dev tools (php-debug, xhprof, composer dev dependencies)
