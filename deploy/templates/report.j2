@@ -41,6 +41,5 @@ password:      {{ ftp_user.password }}
 {% endfor %}
 {% endif %}
 
-{{ ansible_managed }}
-
-
+Report saved to: ansible-config-report_{{ ansible_hostname }}
+Generated on {{ template_run_date}}
