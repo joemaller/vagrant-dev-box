@@ -2,7 +2,7 @@
 
 - name: Install vsftpd
   apt: name={{ item }} state=installed
-  with_items: 
+  with_items:
     - vsftpd
     - libpam-pwdfile
     - apache2-utils
@@ -18,14 +18,14 @@
   file: path={{ ftp_root }} state=directory mode=0555
 
 - name: Make sure non-login {{ ftp_user }} exists
-  user: 
+  user:
     name={{ ftp_user }}
     home={{ ftp_root }}
     group=www-data
     shell=/bin/false
 
 - name: Make sure the password file directory exists
-  file: 
+  file:
     path={{ htpasswd_file | dirname }}
     state=directory
 
