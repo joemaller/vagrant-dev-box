@@ -1,9 +1,11 @@
 ---
 
 - include: clone-private.yml
+  sudo: no
   when: git_private_key != false
 
 - include: clone.yml
+  sudo: no
   when: not git_private_key
 
 - include: permissions.yml

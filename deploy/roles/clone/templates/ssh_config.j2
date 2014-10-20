@@ -1,0 +1,7 @@
+
+# SSH Config added by Ansible
+# {{ ansible_managed }}
+
+Host github.com
+User git
+IdentityFile {{ github_deploy_key.stdout }}

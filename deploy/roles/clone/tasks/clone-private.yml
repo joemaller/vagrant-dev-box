@@ -1,21 +1,23 @@
 ---
 
-- command: mktemp ~/.ansible/tmp/key-XXXXX
-  register: temp_private_key
+- command: mktemp ~/.ssh/github_deploy_key-XXXX
+  register: github_deploy_key
 
 - name: Copy private key to remote machine
-  copy: 
+  copy:
     src={{ git_private_key }}
-    dest={{ temp_private_key.stdout }}
+    dest={{ github_deploy_key.stdout }}
+
+- command: mktemp ~/.ansible/tmp/config_fragment-XXXX
+  register: config_fragment
+
+- name: Write ssh config fragment
+  template: src=ssh_config.j2 dest={{ config_fragment.stdout }}
+
+- shell: cat {{ config_fragment.stdout }} >> ~/.ssh/config
 
 - name: Clone Private Repository
-  git: 
+  git:
     repo={{ git_repo }}
     dest={{ site_root }}
-    key_file={{ temp_private_key.stdout }}
     accept_hostkey=yes
-
-- name: Remove the private key
-  file: 
-    path={{ temp_private_key.stdout }}
-    state=absent
