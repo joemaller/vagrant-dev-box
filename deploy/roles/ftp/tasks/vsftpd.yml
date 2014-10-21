@@ -29,6 +29,12 @@
     path={{ htpasswd_file | dirname }}
     state=directory
 
+- name: Make sure the chroot_list file exists
+  file:
+    state=touch
+    path=/etc/vsftpd.chroot_list
+
+
 - name: Load predefined ftp_users if there are any
   include_vars: "{{ item }}"
   with_first_found:
@@ -36,21 +42,20 @@
     - ../defaults/ftp_users.yml
 
 - name: Remove htpasswd file
-  when: ftp_users
   file: path={{ htpasswd_file }} state=absent
 
 - name: Make ftp_users' FTP directories
   with_items: ftp_users
-  when: ftp_users
-  file: 
+  when: ftp_users is defined and ftp_users is sequence
+  file:
     path={{ ftp_root}}/{{ item.username }}
     state=directory
     mode=0555
 
 - name: Make ftp_users' files directory
   with_items: ftp_users
-  when: ftp_users
-  file: 
+  when: ftp_users is defined and ftp_users is sequence
+  file:
     path={{ ftp_root}}/{{ item.username }}/files
     state=directory
     owner={{ ftp_user }}
@@ -59,8 +64,8 @@
 
 - name: Add htpasswd users
   with_items: ftp_users
-  when: ftp_users
-  htpasswd: 
+  when: ftp_users is defined and ftp_users is sequence
+  htpasswd:
     path={{ htpasswd_file }}
     create=yes
     name={{ item.username }}
@@ -69,8 +74,8 @@
 
 - name: Add htpasswd admin users
   with_items: ftp_admin_users
-  when: ftp_admin_users
-  htpasswd: 
+  when: ftp_admin_users is defined and ftp_admin_users is sequence
+  htpasswd:
     path={{ htpasswd_file }}
     create=yes
     name={{ item.username }}
@@ -79,9 +84,8 @@
 
 - name: Write admin to chroot_list
   with_items: ftp_admin_users
-  when: ftp_admin_users
-  lineinfile: 
-    create=yes
+  when: ftp_admin_users is defined and ftp_admin_users is sequence
+  lineinfile:
     dest=/etc/vsftpd.chroot_list
     line={{ item.username }}
 
