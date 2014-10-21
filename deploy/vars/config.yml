@@ -15,7 +15,7 @@
 # eg. {{ site_root }}/index.html or {{ site_root }}/laravel/public
 # document_root: "{{ site_root }}/public"
 
-# Set the PHP timezone (defaults is America/New_York)
+# Set the PHP timezone (default is America/New_York)
 # Available timezones: http://php.net/manual/en/timezones.php
 # php_timezone: America/New_York
 
