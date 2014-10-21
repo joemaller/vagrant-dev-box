@@ -25,8 +25,9 @@
 # dev: true
 
 # The address of the website repository to clone into site_root
+# Connect to private repositories using a git@github address
 # git_repo: https://github.com/joemaller/vagrant-dev-box.git
-# git_repo: git@github.com:ideasonpurpose/iopweb.git
+# git_repo: git@github.com:some-fake-org/private-repo.git
 
 # Private key to use for cloning private repositories (eg. Github)
 # git_private_key: no
