@@ -32,5 +32,9 @@
 # git_private_key: no
 # git_private_key: /Users/joe/.ssh/id_rsa_deploy
 
+# Github Webhook secret, used for validating and securing webhooks
+# https://developer.github.com/webhooks/securing/
+# github_webhook_secret: 0123456789abcdeffedcba9876543210
+
 # Location of a sql dumpfile to load into the database
 # sql_dumpfile:
