@@ -25,13 +25,13 @@
       file: path={{ site_root }} state=directory owner={{ admin_user }} group=www-data mode=0775
 
     - name: install python-software-properties (required for apt-add-repository)
-      apt: pkg=python-software-properties state=installed
+      apt: pkg=python-software-properties state=installed update_cache=yes
 
     - name: Add git-core ppa
       apt_repository: repo='ppa:git-core/ppa'
 
     - name: 'Install Git and build-essential (compilers, etc.)'
-      apt: name={{ item }} state=installed update_cache=yes
+      apt: name={{ item }} state=installed
       with_items:
         - build-essential
         - git
