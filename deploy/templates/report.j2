@@ -7,8 +7,13 @@ The playbook deployed successfully to the following hosts:
 
 
 Admin User Account
+{% if not vagrant -%}
 username:      {{ admin_user }}
 password:      {{ (lookup('file', 'vars/user_pw') | split)[0] }}
+{%- else -%}
+username:      vagrant
+password:      vagrant
+{%- endif %}
 
 
 Database
