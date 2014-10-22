@@ -60,11 +60,5 @@
 
   tasks:
     #
-    # Add site-specific tasks here
-    #
-    # Example:
-    # - name: Make logs writable
-    #   file:
-    #     path={{ site_root }}/log
-    #     recurse=yes
-    #     mode=0777
+    # Include site-specific tasks by including additional files here
+    # - include: _local_tasks/example.yml
