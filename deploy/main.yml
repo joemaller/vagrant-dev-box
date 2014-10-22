@@ -23,6 +23,7 @@
   pre_tasks:
     - name: Make sure site_root exists
       file: path={{ site_root }} state=directory owner={{ admin_user }} group=www-data mode=0775
+      when: not vagrant
 
     - name: install python-software-properties (required for apt-add-repository)
       apt: pkg=python-software-properties state=installed update_cache=yes
