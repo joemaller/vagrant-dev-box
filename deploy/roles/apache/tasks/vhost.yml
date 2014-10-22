@@ -1,8 +1,8 @@
 ---
 
 - name: Deactivate all existing virtualhosts
-  command: a2dissite '*'
-  # shell: rm -rf /etc/apache2/sites-enabled/*
+  # command: a2dissite '*'
+  shell: rm -rf /etc/apache2/sites-enabled/*
 
 - name: Push our Apache Module virtual host
   template: src=vhost.j2 dest=/etc/apache2/sites-available/{{ site_name }}.conf mode=0640
