@@ -137,7 +137,7 @@ If you're setting up a clean mac system, here is every step necessary to get up 
 5. `brew install git nodejs ansible`
 6. `vagrant up`
 
-Note: You'll have to enter your password so Vagrant can configure the shared folder interfaces correctly. To skip this, you can add [the following commands][sudoers] to `/etc/sudoers` (use [`visudo`][visudo]:
+Note: You'll have to enter your password so Vagrant can configure the shared folder interfaces correctly. To skip this, you can add [the following commands][sudoers] to `/etc/sudoers` (use [`visudo`][visudo]):
 
     Cmnd_Alias VAGRANT_EXPORTS_ADD = /usr/bin/tee -a /etc/exports
     Cmnd_Alias VAGRANT_NFSD = /sbin/nfsd restart
@@ -165,3 +165,4 @@ A more versatile installation would use [virtualenvwrapper][] and [nodeenv][], t
 [vagrant]: http://www.vagrantup.com/downloads.html
 [virtualbox]: https://www.virtualbox.org/wiki/Downloads
 [sudoers]: http://docs.vagrantup.com/v2/synced-folders/nfs.html
+[visudo]: http://www.unixtutorial.org/2014/07/how-to-use-visudo/
