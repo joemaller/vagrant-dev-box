@@ -42,7 +42,7 @@ Any additional tasks specific to a given deployment should be entered into the b
     Directory containing all the files used by a web site. This is usually where files like `composer.json` or `package.json` live.
 
 * **`document_root`**  
-    The public entry point for a web site. Usually a subfolter of `site_root`, something like `{{ site_root }}/app` or `{{ site_root }}/web`. Defaults to `{{ site_root }}/public`.
+    The public entry point for a web site. Usually a subfolder of `site_root`, something like `{{ site_root }}/app` or `{{ site_root }}/web`. Defaults to `{{ site_root }}/public`.
 
 * **`dev`**  
     Set this to true to install dev tools like [XHProf][], [PHPUnit][] and [Xdebug][] as well as any dev-dependencies in `composer.json`. Defaults to true when provisioning Vagrant boxes.
@@ -105,7 +105,10 @@ Though Ansible playbooks are highly-readable, here's a semi-brief rundown of eve
 
 ### Checking out private repositories from Github
 
-The playbooks are able to clone private repositories from Github. To do this, you'll need an authentication keypair already registered with Github. In the vars/config.yml file, set `git_repo` to the ssh address of the private repository and set `git_private_key` to the private key's path on the controller. 
+The playbooks are able to clone private repositories from Github. To do this, you'll need an authentication keypair already registered with Github. In `deploy/vars/config.yml`, set `git_repo` to the ssh address of the private repository and set `git_private_key` to the private key's path on the controller. The added lines should look something like this:
+
+    git_repo: git@github.com:private_repo/secret.git
+    git_private_key: /Users/joe/.ssh/id_rsa
 
 Note that private repository urls should be formatted as `git@github.com:user/repo`, and *not* `ssh://git@github.com:user/repo`.
 
@@ -144,7 +147,6 @@ Note: You'll have to enter your password so Vagrant can configure the shared fol
     Cmnd_Alias VAGRANT_EXPORTS_REMOVE = /usr/bin/sed -E -e /*/ d -ibak /etc/exports
     %admin ALL=(root) NOPASSWD: VAGRANT_EXPORTS_ADD, VAGRANT_NFSD, VAGRANT_EXPORTS_REMOVE
 
-A more versatile installation would use [virtualenvwrapper][] and [nodeenv][], these then create isolated development environments for each project. 
 
 [do]: http://digitalocean.com
 [linode]: http://linode.com
@@ -155,8 +157,6 @@ A more versatile installation would use [virtualenvwrapper][] and [nodeenv][], t
 [xhprof]: https://github.com/phacility/xhprof
 [xdebug]: http://xdebug.org/
 [phpunit]: http://phpunit.de/
-[virtualenvwrapper]: http://virtualenvwrapper.readthedocs.org/
-[nodeenv]: http://ekalinin.github.io/nodeenv/
 [homebrew]: http://brew.sh
 [vsftpd]: https://security.appspot.com/vsftpd.html
 

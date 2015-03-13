@@ -61,5 +61,5 @@
 
   tasks:
     #
-    # Include site-specific tasks by including additional files here
+    # Add site-specific tasks by including additional files here
     # - include: _local_tasks/example.yml
