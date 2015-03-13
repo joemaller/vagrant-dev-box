@@ -9,6 +9,7 @@
 - name: Install Composer dev dependencies
   composer: working_dir={{ composer_dir }} no_dev=no
   when: dev
+  sudo: no
 
 - name: 'npm: Globally install Gulp and Bower'
   npm: name={{ item }} global=yes
@@ -18,3 +19,4 @@
 
 - name: 'npm: install everything from package.json'
   npm: path={{ site_root }}
+  sudo: no
