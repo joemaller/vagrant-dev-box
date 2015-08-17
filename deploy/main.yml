@@ -55,7 +55,7 @@
     - php
     - { role: php-debug, when: dev }
     - { role: ftp, when: not vagrant }
-    - { role: avahi, when: vagrant }
+    # - { role: avahi, when: vagrant }
     - { role: vagrant, when: vagrant }
     - deploy
 

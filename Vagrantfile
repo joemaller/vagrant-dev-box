@@ -8,6 +8,8 @@
 $hostname ||= File.basename(File.dirname(File.expand_path(__FILE__))).downcase.gsub(/[^a-z0-9]+/,'-').gsub(/^-+|-+$/,'')
 # if that fails, fallback to 'vagrant'
 $hostname = "vagrant" if $hostname.empty?
+# add a fake-TLD '.dev' extension
+$hostname = $hostname.gsub(/(\.dev)*$/, '') + '.dev'
 
 # http://stackoverflow.com/a/17729961/503463
 # pref_interface is an array of adapters in preferred order
@@ -27,13 +29,15 @@ if $network_interface
     puts "public_network will be bridged to #{$network_interface}"
 end
 
-# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
-VAGRANTFILE_API_VERSION = "2"
-
-Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+Vagrant.configure(2) do |config|
   config.vm.box = "ubuntu/trusty32"
 
   config.vm.hostname = $hostname
+
+  if Vagrant.has_plugin? 'vagrant-hostsupdater'
+    config.hostsupdater.remove_on_suspend = true
+    # config.hostsupdater.aliases = [$hostname + '.dev']
+  end
 
   config.vm.network "forwarded_port", guest: 80, host: 8080, auto_correct: true
 
@@ -69,6 +73,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         site_name: $hostname,
         site_root: "/vagrant_synced/" + $hostname,
     }
+
+    config.vm.provision "shell", inline: <<-EOF
+      echo "Vagrant Box Provisioned!"
+      echo "Local server address is http://#{$hostname}"
+    EOF
+
   end
 
 end
