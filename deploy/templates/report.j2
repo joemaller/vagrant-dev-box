@@ -1,21 +1,15 @@
-
+{% if not vagrant %}
 
 The playbook deployed successfully to the following hosts:
 {% for host in vars['play_hosts'] %}
 - {{ host }}
+
 {% endfor %}
-
-
 Admin User Account
-{% if not vagrant -%}
 username:      {{ admin_user }}
 password:      {{ (lookup('file', 'vars/user_pw') | split)[0] }}
-{%- else -%}
-username:      vagrant
-password:      vagrant
+
 {%- endif %}
-
-
 Database
 db name:       {{ db_name }}
 db username:   {{ db_user }}
@@ -24,8 +18,8 @@ connect:       mysql -u{{ db_user }} -p{{ db_pw }} {{ db_name }}
 {% if do_database.stat.exists %}
 
 The dumpfile `{{ sql_dumpfile }}` was successfully loaded into the new database `{{ db_name }}`.
-{% endif %}
 
+{% endif %}
 {% if (ftp_users is defined and ftp_users) or (ftp_admin_users is defined and ftp_admin_users) %}
 
 The Following FTP accounts were setup:
@@ -46,5 +40,5 @@ password:      {{ ftp_user.password }}
 {% endfor %}
 {% endif %}
 
-Report saved to: ansible-config-report_{{ ansible_hostname }}
+Report saved to: _ansible-config-report_{{ ansible_hostname }}
 Generated on {{ template_run_date}}

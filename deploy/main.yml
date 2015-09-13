@@ -42,9 +42,15 @@
       lineinfile: "dest=/etc/sudoers state=absent regexp='^{{ admin_user }} ALL=\\(ALL\\) NOPASSWD:ALL$' validate='visudo -cf %s'"
 
     - name: Generate report
-      template: src=templates/report.j2 dest=../.ansible-config-report_{{ ansible_hostname }}
+      template: src=templates/report.j2 dest=../_ansible-config-report_{{ ansible_hostname }}
       sudo: no
       connection: local
+
+    - name: Copy report to /tmp
+      copy: src=../_ansible-config-report_{{ ansible_hostname }}
+        dest=/tmp/config_report
+        force=yes
+      sudo: no
 
   roles:
     - { role: clone, when: not vagrant }

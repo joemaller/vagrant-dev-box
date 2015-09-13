@@ -76,6 +76,12 @@ Vagrant.configure(2) do |config|
 
     config.vm.provision "shell", privileged: false, inline: <<-EOF
       echo "Vagrant Box Provisioned!"
+      # the next line contains with a special space character for formatting
+      echo  
+      cat /tmp/config_report
+      rm /tmp/config_report
+      # the next line contains with a special space character for formatting
+      echo  
       echo "Local server address is http://#{$hostname}"
     EOF
 

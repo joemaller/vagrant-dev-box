@@ -2,4 +2,4 @@
 vagrant_ansible_inventory_default
 node_modules/
 vendor/
-ansible-config-report*
+_ansible-config-report*
