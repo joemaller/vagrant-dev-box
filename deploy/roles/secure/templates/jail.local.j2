@@ -1,2 +1,5 @@
 [DEFAULT]
 ignoreip = {{ ignoreip_list | split | uniq | join(' ') }}
+
+# ban IPs for 12 hours
+bantime  = 43200
