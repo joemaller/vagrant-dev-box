@@ -53,6 +53,7 @@
       sudo: no
 
   roles:
+    - swapfile
     - { role: clone, when: not vagrant }
     - { role: secure, when: not vagrant }
     - apache
