@@ -54,6 +54,7 @@
 
   roles:
     - swapfile
+    - config
     - { role: clone, when: not vagrant }
     - { role: secure, when: not vagrant }
     - apache

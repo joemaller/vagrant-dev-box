@@ -1,0 +1,20 @@
+---
+
+- name: Make Vim the default editor
+  shell: update-alternatives --set editor /usr/bin/vim.basic
+
+- name: Set VISUAL environment variable in .bashrc
+  lineinfile:
+    dest=/home/{{ admin_user }}/.bashrc
+    regexp='^export VISUAL=.*$'
+    line='export VISUAL={{ default_editor }}'
+    insertafter=EOF
+    state=present
+
+- name: Set EDITOR environment variable in .bashrc
+  lineinfile:
+    dest=/home/{{ admin_user }}/.bashrc
+    regexp='^export EDITOR=.*$'
+    line='export EDITOR={{ default_editor }}'
+    insertafter=EOF
+    state=present
