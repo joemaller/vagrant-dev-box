@@ -74,7 +74,7 @@ Vagrant.configure(2) do |config|
         site_root: "/vagrant_synced/" + $hostname,
     }
 
-    config.vm.provision "shell", inline: <<-EOF
+    config.vm.provision "shell", privileged: false, inline: <<-EOF
       echo "Vagrant Box Provisioned!"
       echo "Local server address is http://#{$hostname}"
     EOF
